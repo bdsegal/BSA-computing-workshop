@@ -1,0 +1,5 @@
+\beamer@endinputifotherversion {3.36pt}
+\beamer@sectionintoc {1}{Read in}{4}{0}{1}
+\beamer@sectionintoc {2}{Manipulating datasets}{8}{0}{2}
+\beamer@subsectionintoc {2}{1}{Overview}{8}{0}{2}
+\beamer@subsectionintoc {2}{2}{Basic manipulations}{9}{0}{2}

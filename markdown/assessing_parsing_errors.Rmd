@@ -1,0 +1,98 @@
+---
+title: "Assessing parsing errors from `readr`"
+author: "Brian Segal"
+date: "Feb 12, 2016"
+number_sections: yes
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+```
+
+# Assessing parsing errors from `readr`
+
+Let's load the data from the [2009 residential energy consumption survey (RECS)](http://www.eia.gov/consumption/residential/data/2009/index.cfm?view=microdata). As described on the website, the 2009 RECS included 12,083 households selected at random using a complex multistage, area-probability sample design.
+
+```{r, warning=FALSE, message=FALSE}
+library(readr)
+
+parent <- dirname(getwd())
+
+# download the data if it doesn't already exist
+if(!file.exists(file.path(parent, "data", "recs2009.csv"))){
+  download.file(url="http://www.eia.gov/consumption/residential/data/2009/csv/recs2009_public.csv",
+    mode="wb",
+    destfile=file.path(parent,"data", "recs2009.csv"))
+}
+
+data <- read_csv(file.path(parent, "data", "recs2009.csv"), progress=FALSE)
+prob <- problems(data)
+badCol <- unique(prob$col)
+badCol
+```
+
+There were problems reading in eight columns. There were only `r nrow(prob)` observations with problems, but before proceeding, we should figure out if these problems indicate larger data quality issues, especially if we are interested in the problematic columns. To start, we can consult the documentation, and if we deem it sufficiently important, we could get in touch with the staff at EIA.
+
+In this case, the Energy Information Administration (EIA) provides a layout file. We can use it to get more information about the problematic columns.
+
+```{r}
+# get the layout file
+layout <- read.csv("http://www.eia.gov/consumption/residential/data/2009/csv/public_layout.csv")
+str(layout)
+
+badColInfo <- layout[which(layout$Variable.Name %in% badCol),]
+badColInfo
+```
+
+I've never worked with this data before, but '`r as.character(badColInfo[1,2])`' sounds like it should be restricted to be a non-negative integer. I suspect that most of the data are ok and that there are just few problematic values, but I would look into it further before doing a serious analysis.
+
+Assuming that we determined that the data were ok, let's use the layout file to tell `readr` how to read the data properly. See `vignette("column-types")` for more information about column types (enter the text into an R session after loading the `readr` package).
+
+```{r}
+colTypes <- as.character(layout$Variable.Type)
+colTypes <- gsub("Numeric","d", colTypes) # d for double
+colTypes <- gsub("Character","c", colTypes) # c for character
+colTypes <- paste(colTypes, collapse="") # concatenate into 1 string
+
+data <- read_csv(file.path(parent, 'data', 'recs2009.csv'),
+  col_types = colTypes,
+  progress = FALSE)
+```
+
+This is one way to solve the problem, though now every column is a `double`, so the data take up more space. This isn't a big dataset, so it's not a problem, but in other cases you might want to specify all the numeric columns as `int`, accept for the eight problematic columns.
+
+
+
+
+
+We should also take a look at the missing data patterns before moving on. We'll use the [`pheatmap`](https://cran.r-project.org/web/packages/pheatmap/index.html) package to visualize the first few rows of missing data. The [`mi`](https://cran.r-project.org/web/packages/mi/index.html) package is also useful for inspecting missing data patterns, though it seems to work best for smaller datasets.
+
+```{r, eval=FALSE}
+library(pheatmap)
+
+dataNA <- is.na(data)
+mode(dataNA) <- "integer"
+pheatmap(dataNA[1:500,], cluster_rows = FALSE, cluster_cols = FALSE)
+```
+
+It looks like there's a variable all the way on the left that is missing frequently, as well as a few on the right. Let's see what they are.
+
+```{r, eval=FALSE}
+colsWithNA <- which(apply(is.na(data), 2, sum) > 0)
+colsWithNA
+barplot(colsWithNA)
+```
+
+We should keep these variables in mind when we analyze the data, because the missingess might introduce bias.
+
+For the rest of the workshop, let's take a look at the electricity consumption data in Kilowatt-hours (KWH). We'll keep those columns, as well as the household id variable `DOEID` and the sampling weights `NWEIGHT`.
+
+```{r, eval=FALSE}
+kwhCols <- grep("KWH", colnames(data))
+idWeightCols <- which(colnames(data) %in% c("DOEID","NWEIGHT"))
+
+kwhData <- data[,c(idWeightCols,kwhCols)]
+str(kwhData)
+
+layout[kwhCols,1:2]
+```

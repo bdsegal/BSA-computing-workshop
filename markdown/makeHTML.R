@@ -28,7 +28,6 @@ render("1.managing_large_files.Rmd",
 
 browseURL(paste('file://', file.path(parent, 'html','1.managing_large_files.html'), sep=''))
 
-
 # 2. Reshaping and manipulating data
 render("2.reshaping_manipulating.Rmd",
   output_format = html_document(number_sections=TRUE, toc=TRUE),
@@ -37,12 +36,12 @@ render("2.reshaping_manipulating.Rmd",
 
 browseURL(paste('file://', file.path(parent, 'html','2.reshaping_manipulating.html'), sep=''))
 
-# ggplot and ggvis
-render(".Rmd",
-  output_format = html_document(number_sections=TRUE, toc=TRUE),
-  output_dir = file.path(parent, 'html'),
-  output_file = ".html")
+# # ggplot and ggvis
+# render(".Rmd",
+  # output_format = html_document(number_sections=TRUE, toc=TRUE),
+  # output_dir = file.path(parent, 'html'),
+  # output_file = ".html")
 
-browseURL(paste('file://', file.path(parent, 'html','.html'), sep=''))
+# browseURL(paste('file://', file.path(parent, 'html','.html'), sep=''))
 
 

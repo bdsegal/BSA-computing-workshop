@@ -1,0 +1,23 @@
+---
+title: "Plotting with `ggvis`"
+author: "Brian Segal"
+date: "Feb 12, 2016"
+number_sections: yes
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+```
+# Introduction
+
+`ggvis`, also by Hadley Wickham, is more recent package. It uses the same piping operators `%>%` as `dplyr`, and tends to render plots more quickly than `ggplot2`. This makes it a good complement to `Shiny`, which Mathieu will cover in a future workshop. You can also make interactive plots in `ggvis` without Shiny.
+
+Let's remake some of the above plots from [the last tutorial] with `ggvis`, and add interactive components.
+
+```{r, warning = TRUE, message = FALSE}
+library(readr)
+data <- read_csv("http://www.eia.gov/consumption/residential/data/2009/csv/recs2009_public.csv",
+  progress=FALSE)
+```
+
+As before, we'll ignore the parsing warnings for now (we take a closer look at them in [link to tutorial]).

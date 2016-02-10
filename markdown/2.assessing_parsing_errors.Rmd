@@ -9,8 +9,6 @@ number_sections: yes
 knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 ```
 
-# Assessing parsing errors from `readr`
-
 Let's load the data from the [2009 residential energy consumption survey (RECS)](http://www.eia.gov/consumption/residential/data/2009/index.cfm?view=microdata). As described on the website, the 2009 RECS included 12,083 households selected at random using a complex multistage, area-probability sample design.
 
 ```{r, warning=FALSE, message=FALSE}
@@ -75,8 +73,6 @@ mode(dataNA) <- "integer"
 pheatmap(dataNA[1:500,], cluster_rows = FALSE, cluster_cols = FALSE)
 ```
 
-It looks like there's a variable all the way on the left that is missing frequently, as well as a few on the right. Let's see what they are.
-
 ```{r, eval=FALSE}
 colsWithNA <- which(apply(is.na(data), 2, sum) > 0)
 colsWithNA
@@ -84,15 +80,3 @@ barplot(colsWithNA)
 ```
 
 We should keep these variables in mind when we analyze the data, because the missingess might introduce bias.
-
-For the rest of the workshop, let's take a look at the electricity consumption data in Kilowatt-hours (KWH). We'll keep those columns, as well as the household id variable `DOEID` and the sampling weights `NWEIGHT`.
-
-```{r, eval=FALSE}
-kwhCols <- grep("KWH", colnames(data))
-idWeightCols <- which(colnames(data) %in% c("DOEID","NWEIGHT"))
-
-kwhData <- data[,c(idWeightCols,kwhCols)]
-str(kwhData)
-
-layout[kwhCols,1:2]
-```

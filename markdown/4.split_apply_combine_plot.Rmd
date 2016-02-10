@@ -1,0 +1,285 @@
+---
+title: "Split, Apply, Combine, Reshape, and Plot"
+author: "Brian Segal"
+date: "Feb 12, 2016"
+number_sections: yes
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+```
+# Introduction
+
+In this tutorial, we will focus on three R packages from Hadley Wickham that are typically used together: `dplyr` (split, apply, combine), `reshape2` (reshape), and `ggplot2` (plot). There are several good tutorials for these packages (see Hadley Wickham's [Introduction to `dplyr`](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html), Sean Anderson's [Introduction to `reshape2`](http://seananderson.ca/2013/10/19/reshape.html), and Hadley Wickham's [website for the `reshape`](http://had.co.nz/reshape/). Wickham's [website for `ggplot2`](http://docs.ggplot2.org/current/) describes all of the options and gives many examples. Since there are so many existing resources for `dplyr`, `reshape2`, and `ggplot2`, I thought it would be most helpful to give a brief overview of each, and then jump into some examples where we use them together.
+
+# Brief Overview
+
+## Split, apply, combine with `dplyr`
+
+Many common data processing tasks fit into the split, apply, and combine framework, which was popularized in the R community by Hadley Wickham. In this framework, we
+
+1. **Split** the dataset into subsets
+2. **Apply** a function to each subset
+3. **Combine** the results into either a new:
+    + Dataset
+    + Column
+
+For more background, see Wickham's 2011 paper, [The Split-Apply-Combine Strategy for Data Analysis](http://www.jstatsoft.org/article/view/v040i01). It is easy to implement the split, apply, combine approach with Wickham's `dplyr` package, which replaces the `plyr` package, and is much faster. In `dplyr`, we
+
+1. **Split** using `group_by`
+2. **Apply** a function, e.g. `mean`
+3. **Combine** into a:
+    + New dataset with `summarize`
+    + New column, keeping old columns, with `mutate`
+    + New column, dropping old columns, with `transmute`
+  
+You can chain these functions together using pipes, written as `%>%`. For example, suppose our data is stored in `myData`. Then
+```{r, eval=FALSE}
+classSummary <- myData %>% 
+  group_by(class) %>%
+  summarize(numberOfDogs <- sum(dogs),
+            timesDogAteHw <- sum(DogAteHw),
+            meanGPA <- mean(GPA)
+  )    
+```
+does the following:
+
+1. `myData` is passed to `group_by`
+2. `group_by` subsets `data` by `class`
+3. For each subset,
+    + `summarize` calculates, `numberOfDogs`, `timesDogAteHw`, and `meanGPA`
+4. All summaries are combined into a data frame and assigned to `classSummary`
+
+`myData` has one row per class, one column per measured variable, and one column to identify the class.
+
+## Reshape with `reshape2`
+
+You will usually need to reshape the dataset from wide to long format before plotting with `ggplot2`. With `reshape2`, this is accomplished with the `melt` function. You can specify the grouping variable with `id.vars`, and the variables you want to plot with `measure.vars`. For example, if we wanted to plot the number of dogs by the number of times dogs ate homework, aggregated at the class level, we could melt the data with
+
+```{r, eval = FALSE}
+myDataMelt <- melt(myData, id.vars = "class", measure.vars = c("numberOfDogs", "timesDogAteHw")
+```
+
+`myDataMelt` has three columns:
+  
+  * `class`, which identifies the class
+  * `variable`, which identifies the measured variables `numberOfDogs` and `timesDogAteHw`
+  * `value`, which contains the value for each class/variable combination
+
+If you don't specify `measure.vars`, `melt` assumes that all variables except for the `id.vars` are measured variables.
+
+You can also use `reshape2` to go from long to wide format with `dcast` for data frames and `acast` for arrays, though we won't cover that here. When going from long to wide format, you can aggregate by specifying the `fun.aggregate` function.
+
+## Plotting with `ggplot2`
+
+`ggplot2` is based on Leland Wilkinson's [Grammar of Graphics](https://www.cs.uic.edu/~wilkinson/TheGrammarOfGraphics/GOG.html), which is also the basis for the [Bokeh](http://bokeh.pydata.org/en/latest/) library for Python.
+
+In `ggplot2`, plots are composed of layers, and each layer must contain at least the following components:
+
+  * Aesthetic (aes), e.g. `aes(x = x, y = y)`
+  * Data, `data = myData`
+  * Geometric object, e.g. `geom_point`, `geom_line`
+
+There are many other options, some of which we'll show below. You also don't have to re-specify all components for each layer, unless they change.
+
+There are two ways to create a plot:
+
+1. Short syntax with `qplot` (q for quick)
+2. Full syntax with `ggplot`
+
+The following are equivalent:
+```{r, eval = FALSE}
+qplot(x = age, y = greyHair, data = myData, geom = "line")
+
+ggplot(aes(x = age, y = greyHair), data = myData)+
+  geom_line()
+```
+
+We'll use both `qplot` and `ggplot` below. While `qplot` is more concise, it isn't as flexible as `ggplot`.
+
+# Example
+
+In this example, we'll use several aspects of `ggplot2` that I didn't mention above. I'll explain these as we go.
+
+Let's take a look at the electricity consumption data in killowat-hours (KWH). We'll also use the the sampling weights, `NWEIGHT`, and [U.S. Census regions](http://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf) `REGIONC`. There are a few parsing errors, which I deal with in [link to tutorial]. For now, we can ignore the errors.
+
+```{r, warning = TRUE, message = FALSE}
+library(readr)
+data <- read_csv("http://www.eia.gov/consumption/residential/data/2009/csv/recs2009_public.csv",
+  progress=FALSE)
+```
+
+Before jumping into the [Hadleyverse](http://blog.revolutionanalytics.com/2015/03/hadleyverse.html), let's use R base functions to plot regional means.
+
+```{r}
+data$REGIONC <- factor(data$REGIONC, labels=c("Northeast","Midwest","South","West"))
+
+kwhMean <- tapply(data$KWH, data$REGIONC, mean)
+barplot(kwhMean, ylab="kWh", xlab="Region")
+```
+
+Now let's use Wickham's packages.
+
+```{r}
+library(reshape2)
+library(dplyr)
+library(ggplot2)
+
+# Use dplyr to get both the weighted and unweighted means
+KwhByRegion <- data %>%
+  group_by(REGIONC) %>%
+  summarize(
+    weighted = weighted.mean(x = KWH, w = NWEIGHT),
+    unweighted = mean(KWH)
+  )
+
+# Use reshape2 to prep for gpplot2
+KwhByRegionMelt <- melt(KwhByRegion, id.vars = "REGIONC")
+KwhByRegionMelt
+
+# plot with ggplot
+ggplot(aes(x = factor(REGIONC), y = value, fill = variable), data = KwhByRegionMelt)+
+  geom_bar(stat = "identity", position = "dodge")+
+  theme_bw(16)+
+  labs(x = "Region", y = "kWh", title = "Regional Kilowatt-Hour Usage 2009 \n Weighted vs Unweighted Mean")+
+  scale_fill_discrete("")
+
+```
+
+It looks like the South uses a lot of electricity. Is it because they have a lot of [cooling degree days](http://www.srh.noaa.gov/key/?n=climate_heat_cool) `CDD65`?
+
+>Note: I use a 1/4 scaling factor to induce normality for `KWH`, which makes the standard errors more reliable for the smoothing estimates. We'll talk more about this and `geom_smooth` below.
+
+```{r}
+ggplot(aes(x = CDD65, y = KWH^(1/4)), data = data)+
+  geom_point(alpha = 0.03)+
+  geom_smooth()+
+  facet_wrap(~REGIONC)+
+  theme_bw(18)+
+  geom_hline(yintercept = mean(data$KWH^(1/4)), color = "red", linetype = "dashed")+
+  labs(y = expression("kWh"^"1/4"), x = "Cooling days (base temp 65 F)")
+```
+
+For a more direct visual comparison, instead of faceting by region, let's color by region.
+
+```{r}
+ggplot(aes(x = CDD65, y = KWH^(1/4), color = REGIONC), data = data)+
+  geom_point(alpha = 0.075)+
+  geom_smooth()+
+  theme_bw(18)+
+  labs(y = expression("kWh"^"1/4"), x = "Cooling days (base temp 65 F)")+
+  scale_color_discrete("Region")
+```
+
+Even after adjusting for cooling days, the south seems to use more electricity.
+
+Now for that 1/4 scaling factor. First let's look at a histogram of `KWH`.
+
+```{r}
+qplot(x = data$KWH, geom = "histogram", xlab = "kWh")+
+  theme_classic(18)
+```
+
+That's definitely not a normal distribuiton. Maybe it's an exponential? What happens if we take a log transform?
+
+```{r}
+qplot(x = log(data$KWH), geom = "histogram", xlab = "log(kWh)")+
+  theme_classic(18)
+```
+
+That's still skewed, but raising `KWH` to a 1/4 seems to induce normality.
+
+```{r}
+qplot(x = data$KWH^(1/4), geom = "histogram", xlab = expression("kWh"^"1/4"))+
+  theme_classic(18)
+```
+
+Let's spiff up the plot by using a kernel density estimator and overlaying a normal distribution in red. `geom_density` calls the `density` function from the `stats` package.
+
+```{r}
+ggplot(aes(x = KWH^(1/4)), data = data)+
+  geom_density()+
+  stat_function(fun = dnorm, arg = list(mean = mean(data$KWH^(1/4)), sd = sd(data$KWH^(1/4))), 
+    color="red")+
+  theme_classic(18)+
+  labs(x = expression("kWh"^"1/4"), y = "Density")
+```
+
+We could also make the lines thicker and fill in the kernel density estimator.
+```{r}
+ggplot(aes(x = KWH^(1/4)), data = data)+
+  geom_density(color = "grey", fill = "grey", size = 1)+
+  stat_function(fun = dnorm,
+    arg = list(mean = mean(data$KWH^(1/4)), sd = sd(data$KWH^(1/4))), 
+    color = "red", size = 1)+
+  theme_classic(18)+
+  labs(x = expression("kWh"^"1/4"), y = "Density")
+```
+
+We can also look at a q-q plot.
+```{r}
+ggplot(aes(sample = KWH^(1/4)), data = data)+
+  stat_qq()+
+  theme_classic(18)
+```
+
+Scaling the outcome is convenient for mathematical reasons, but it makes interpretation difficult. The gamma distribution is a flexible choice for this type of data, and it seems to describe the distribution of `KWH` well.
+
+```{r}
+# estimate parameters of gamma with method of moments
+mu <- mean(data$KWH)
+sigma2 <- var(data$KWH)
+alpha <- mu^2/sigma2
+beta <- sigma2/mu
+	
+ggplot(aes(x = KWH), data = data)+
+  geom_density(color = "grey", fill = "grey", size = 1)+
+  stat_function(fun = dgamma, arg = list(shape = alpha, scale = beta), 
+                color = "red", size = 1)+
+  theme_classic(18)+
+  labs(x = "kWh", y = "Density")
+```
+
+Then we can repeat make the same plots as above, but on the original scale, and ask the `gam` function to use the Gamma distribution to fit the smooth.
+```{r, warning=TRUE, message=TRUE}
+ggplot(aes(x = CDD65, y = KWH, color = REGIONC), data = data)+
+  geom_point(alpha = 0.075)+
+  geom_smooth(method = "gam", method.args = list(family = Gamma))+
+  theme_bw(18)+
+  labs(y = "kWh", x = "Cooling days (base temp 65 F)")+
+  scale_color_discrete("Region")+
+  scale_y_continuous(lim = c(0,50000))
+```
+
+The `gam` algorithm didn't converge, so these smooths might not be quite right, but they seem reasonable for exploratory purposes. We also didn't use the sampling weights in the smooth.
+
+For more than 1,000 observations, `geom_smooth` calls the `gam` function from SImon Wood's [`mgcv`](https://cran.r-project.org/web/packages/mgcv/mgcv.pdf) package. `gam` stands for generalized additive model, but in this case, the smooth is a function of only one variable -- cooling days. `gam` uses cubic regression splines by default, so the smooths in the plots above are cubic regression splines within each region. As an aside, I highly recommend Simon Wood's textbook, [Generalized Additive Models: An Introduction with R](https://www.crcpress.com/Generalized-Additive-Models-An-Introduction-with-R/Wood/9781584884743).
+
+# Common mistakes
+
+* putting `color = "red"` inside the `aes`
+
+# Exercises
+
+**dplyr**
+
+1. Alter the `dplyr` call above to group by both `REGIONC` and `DIVISON`.
+2. Use `n=n()` in `summarize` to get the number of households in each region/division
+3. Instead of summarizing the data, add columns with `mutate` and `transmute`
+
+**reshape2**
+
+4. Melt the data frame from exercise 2, but use both REGIONC and 'DIVISON' as `id.vars`.
+
+**ggplot2**
+
+5. Make the plots that compare `KWH` across `DIVISION` instead of `REGIONC`.
+6. Facet the plots from exercise 1 by `REGIONC`.
+
+
+
+# Final note
+Note: More recently, Hadley Wickham came out with the `tidyr` package. In [introducing `tidyr`](http://blog.rstudio.org/2014/07/22/introducing-tidyr) Wickham says:
+
+>Just as reshape2 did less than reshape, tidyr does less than reshape2. It's designed specifically for tidying data, not general reshaping. In particular, existing methods only work for data frames, and tidyr never aggregates.
+

@@ -1,0 +1,25 @@
+---
+title: "Faster data manipulations with `readr`, `dplyr` and `data.table`"
+author: "Brian Segal"
+date: "Feb 12, 2016"
+number_sections: yes
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+```
+# Introduction
+
+# Overview
+
+## `dplyr` with `readr`
+
+
+## `data.table`
+
+## `dplyr` with `data.table`
+
+# Example
+
+Bootstrap with `dplyr` and `data.table` compared to base R
+

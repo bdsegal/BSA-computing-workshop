@@ -12,7 +12,7 @@ These notes go over some aspects of:
 
 I might also put together notes on visualizing missing data with `pheatmap` and `mi`.
 
-All notes are in the `html` folder, and the R markdown files are in the `markdown` folder. To run tutorials 0-3 without changing the Rmd files, you'll need to replicate the folder structure on your computer. One way to do this is by cloning the repository.
+All notes are in the `html` folder, and the R markdown files are in the `markdown` folder. To run tutorials 1-4 without changing the Rmd files, you'll need to replicate the folder structure on your computer. One way to do this is by cloning the repository.
 
 Feel free to contact me at bdsegal@umich.edu if you have any questions.
 

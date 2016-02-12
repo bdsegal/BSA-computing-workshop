@@ -3,6 +3,7 @@ layout: page
 title: Biostatistics Student Association Computing Workshop
 description: Statistical programming with R
 ---
+
 ## Statistical programming in R
 
 These notes go over some aspects of:
@@ -23,5 +24,3 @@ Feel free to contact me at bdsegal@umich.edu if you have any questions.
 Thanks, and happy computing!
 
 ---
-
-[Brian Segal](https://github.com/bdsegal)

@@ -15,7 +15,7 @@ These notes cover some aspects of:
 4. [Implementing the split, apply, combine approach with `dplyr`, and reshaping and plotting with `reshape2` and `ggplot2`](4.split_apply_combine_plot.html)
 5. [Plotting with `ggvis`](5.ggvis.html)
 
-I might also put together notes on visualizing missing data with `pheatmap` and `mi`.
+I might also put together notes on visualizing missing data with [`pheatmap`](https://cran.r-project.org/web/packages/pheatmap/index.html) and [`mi`](https://cran.r-project.org/web/packages/mi/index.html).
 
 To run tutorials 1-4, it would be easiest to clone the [repository](https://github.com/bdsegal/BSA-computing-workshop).
 

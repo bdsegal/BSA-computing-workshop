@@ -118,14 +118,14 @@ img {
 <p>does the following:</p>
 <ol style="list-style-type: decimal">
 <li><code>myData</code> is passed to <code>group_by</code></li>
-<li><code>group_by</code> subsets <code>data</code> by <code>class</code></li>
+<li><code>group_by</code> subsets <code>myData</code> by <code>class</code></li>
 <li>For each subset,
 <ul>
 <li><code>summarize</code> calculates <code>numberOfDogs</code>, <code>timesDogAteHw</code>, and <code>meanGPA</code></li>
 </ul></li>
 <li>All summaries are combined into a data frame and assigned to <code>classSummary</code></li>
 </ol>
-<p><code>myData</code> has one row per class, one column per measured variable, and one column to identify the class.</p>
+<p>The result, <code>classSummary</code>, is in wide format, i.e. it has one row per class, and separate columns for each summarized variable (<code>numberOfDogs</code>, <code>timesDogAteHw</code>, <code>meanGPA</code>). Please see below for an example.</p>
 </div>
 <div id="reshape-with-reshape2" class="section level2">
 <h2><span class="header-section-number">2.2</span> Reshape with <code>reshape2</code></h2>
@@ -197,8 +197,16 @@ KwhByRegion &lt;- data %&gt;%
     weighted = weighted.mean(x = KWH, w = NWEIGHT),
     unweighted = mean(KWH)
   )
-
-# Use reshape2 to prep for gpplot2
+KwhByRegion</code></pre>
+<pre><code>## Source: local data frame [4 x 3]
+## 
+##     REGIONC  weighted unweighted
+##      (fctr)     (dbl)      (dbl)
+## 1 Northeast  8081.680   7933.815
+## 2   Midwest 10583.248  11292.783
+## 3     South 14560.929  14762.980
+## 4      West  9305.907   8991.274</code></pre>
+<pre class="r"><code># Use reshape2 to prep for gpplot2
 KwhByRegionMelt &lt;- melt(KwhByRegion, id.vars = &quot;REGIONC&quot;)
 KwhByRegionMelt</code></pre>
 <pre><code>##     REGIONC   variable     value

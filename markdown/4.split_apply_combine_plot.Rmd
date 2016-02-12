@@ -45,12 +45,12 @@ classSummary <- myData %>%
 does the following:
 
 1. `myData` is passed to `group_by`
-2. `group_by` subsets `data` by `class`
+2. `group_by` subsets `myData` by `class`
 3. For each subset,
     + `summarize` calculates `numberOfDogs`, `timesDogAteHw`, and `meanGPA`
 4. All summaries are combined into a data frame and assigned to `classSummary`
 
-`myData` has one row per class, one column per measured variable, and one column to identify the class.
+The result, `classSummary`, is in wide format, i.e. it has one row per class, and separate columns for each summarized variable (`numberOfDogs`, `timesDogAteHw`, `meanGPA`). Please see below for an example.
 
 ## Reshape with `reshape2`
 
@@ -132,6 +132,7 @@ KwhByRegion <- data %>%
     weighted = weighted.mean(x = KWH, w = NWEIGHT),
     unweighted = mean(KWH)
   )
+KwhByRegion
 
 # Use reshape2 to prep for gpplot2
 KwhByRegionMelt <- melt(KwhByRegion, id.vars = "REGIONC")

@@ -22,5 +22,3 @@ To run tutorials 1-4, it would be easiest to clone the [repository](https://gith
 Feel free to contact me at bdsegal@umich.edu if you have any questions.
 
 Thanks, and happy computing!
-
----

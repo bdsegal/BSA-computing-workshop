@@ -85,19 +85,19 @@ img {
 <h1><span class="header-section-number">1</span> Introduction</h1>
 <p>Hadley Wickham’s <code>ggvis</code> package is intended for making interactive plots. It renders plots more quickly than <code>ggplot2</code>, which makes it a good choice for using in <code>Shiny</code> apps, which Mathieu will cover in a future workshop. It also uses the same piping operators <code>%&gt;%</code> as <code>dplyr</code>, so you can chain <code>dplyr</code> and <code>ggvis</code> commands together.</p>
 <p>All <code>ggvis</code> graphics are rendered in a web browser, and interactive plots only work if they are connected to an active R session. <code>ggivs</code> is newer than <code>ggplot2</code>, and while it is great at making web-ready interactive plots, it doesn’t yet support a few features, such as side-by-side bar plots and faceting.</p>
-<p>Instead of the aesthetics (<code>aes</code>), <code>ggvis</code> has properties (<code>props</code>). In most <code>ggvis</code> plots, you do not need to explicitly call <code>prop</code>. This is similar to using <code>qplot</code> from <code>ggplot2</code>.</p>
+<p>Instead of aesthetics (<code>aes</code>), <code>ggvis</code> has properties (<code>props</code>). In most <code>ggvis</code> plots, you do not need to explicitly call <code>prop</code>. This is similar to using <code>qplot</code> from <code>ggplot2</code>.</p>
 <p>The syntax is also slightly different than <code>ggplot2</code>. Instead of just using the <code>=</code> operator, <code>ggvis</code> uses the following:</p>
 <ul>
-<li>Map (<code>=</code>): maps graphic parameters to variables in the data</li>
-<li>Set (<code>:=</code>): set a graphic paramter, e.g. <code>fill := &quot;red&quot;</code></li>
-<li>Evaluate in data (<code>~</code>): , e.g. <code>x = ~variable</code></li>
+<li><code>=</code> <strong>maps</strong> graphical parameters to variables</li>
+<li><code>:=</code> <strong>sets</strong> graphical parameters, e.g. <code>fill := &quot;red&quot;</code></li>
+<li><code>~</code> <strong>evaluates in the data</strong> , e.g. <code>x = ~variable</code></li>
 </ul>
-<p>If you don’t use <code>~</code> in front of <code>variable</code>, <code>ggvis</code> won’t know where to look for <code>variable</code>.</p>
+<p>Suppose that <code>variable</code> is a column in <code>myData</code>. If you don’t use <code>~</code> in front of <code>variable</code>, <code>ggvis</code> won’t look for <code>variable</code> in <code>myData</code>.</p>
 <p>There are other differences, too. For more information, please see the <a href="http://ggvis.rstudio.com/"><code>ggvis</code> homepage</a> and the pages to which it links.</p>
 </div>
 <div id="examples" class="section level1">
 <h1><span class="header-section-number">2</span> Examples</h1>
-<p>We’ll use the [residential energy consumption survey[(<a href="http://www.eia.gov/consumption/residential/data/2009/" class="uri">http://www.eia.gov/consumption/residential/data/2009/</a>) data again. As before, we’ll ignore the parsing warnings for now.</p>
+<p>We’ll use the <a href="http://www.eia.gov/consumption/residential/data/2009/">2009 residential energy consumption survey</a> data again. As before, we’ll ignore the parsing warnings for now.</p>
 <pre class="r"><code>library(readr)
 data &lt;- read_csv(&quot;http://www.eia.gov/consumption/residential/data/2009/csv/recs2009_public.csv&quot;,
   progress=FALSE)</code></pre>
@@ -111,7 +111,7 @@ data &lt;- read_csv(&quot;http://www.eia.gov/consumption/residential/data/2009/c
 ## .... ........... ...................... ......
 ## .See problems(...) for more details.</code></pre>
 <pre class="r"><code>data$REGIONC &lt;- factor(data$REGIONC, labels=c(&quot;Northeast&quot;,&quot;Midwest&quot;,&quot;South&quot;,&quot;West&quot;))</code></pre>
-<p>Let’s remake some of the plots from the <code>ggplot2</code> tutorial with <code>ggvis</code>. As in the <code>ggplot2</code> tutorial, I’ll explain the new parts of each plot as we go.</p>
+<p>Let’s remake some of the plots from the <code>ggplot2</code> tutorial with <code>ggvis</code>. As in the <code>ggplot2</code> tutorial, I’ll explain the new parts of each plot in the workshop as we go.</p>
 <pre class="r"><code>library(ggvis)
 library(dplyr)
 
@@ -122,27 +122,27 @@ vis &lt;- data %&gt;%
   layer_bars()
 
 vis</code></pre>
-<p><div id="plot_id384781708-container" class="ggvis-output-container">
-<div id="plot_id384781708" class="ggvis-output"></div>
+<p><div id="plot_id454511152-container" class="ggvis-output-container">
+<div id="plot_id454511152" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id384781708_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id384781708" data-renderer="svg">SVG</a>
+<a id="plot_id454511152_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id454511152" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id384781708_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id384781708" data-renderer="canvas">Canvas</a>
+<a id="plot_id454511152_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id454511152" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id384781708_download" class="ggvis-download" data-plot-id="plot_id384781708">Download</a>
+<a id="plot_id454511152_download" class="ggvis-download" data-plot-id="plot_id454511152">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id384781708_spec = {
+var plot_id454511152_spec = {
   "data": [
     {
       "name": ".0/count1/stack2",
@@ -270,10 +270,10 @@ var plot_id384781708_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id384781708").parseSpec(plot_id384781708_spec);
+ggvis.getPlot("plot_id454511152").parseSpec(plot_id454511152_spec);
 </script></p>
 <p>Notice that you can resize the plot by dragging the bottom right corner. You can also change the rendering format and download the plot by clicking on the settings button in the top right corner.</p>
-<p>Now let’s adjust the axis labels. As far as I know, there is not a way to set the font size globally, as in <code>ggplot2</code> (e.g. <code>theme_bw(18)</code>). The <code>ggvis</code> syntax is flexible, but verbose. To keep the code manageable and readable, you can first assign all the non-formatting aspects to a variable, e.g. <code>vis</code>, and then pipe that variable to the formatting commands. We already created <code>vis</code>, so now we can add the formatting commands.</p>
+<p>Now let’s adjust the axis labels. As far as I know, there is not a way to set the font size globally like in <code>ggplot2</code> (e.g. <code>theme_bw(18)</code>). The <code>ggvis</code> syntax is flexible, but verbose. To keep the code manageable and readable, you can first assign all the non-formatting aspects to a variable, e.g. <code>vis</code> for visual, and then pipe that variable to the formatting commands. We already created <code>vis</code>, so now we can add the formatting commands.</p>
 <pre class="r"><code>vis %&gt;%
   add_axis(&quot;x&quot;, title = &quot;Region&quot;, title_offset = 40,
     properties = axis_props(
@@ -287,27 +287,27 @@ ggvis.getPlot("plot_id384781708").parseSpec(plot_id384781708_spec);
       labels = list(fontSize = 16)
     )
   )</code></pre>
-<p><div id="plot_id520730690-container" class="ggvis-output-container">
-<div id="plot_id520730690" class="ggvis-output"></div>
+<p><div id="plot_id603870225-container" class="ggvis-output-container">
+<div id="plot_id603870225" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id520730690_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id520730690" data-renderer="svg">SVG</a>
+<a id="plot_id603870225_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id603870225" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id520730690_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id520730690" data-renderer="canvas">Canvas</a>
+<a id="plot_id603870225_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id603870225" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id520730690_download" class="ggvis-download" data-plot-id="plot_id520730690">Download</a>
+<a id="plot_id603870225_download" class="ggvis-download" data-plot-id="plot_id603870225">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id520730690_spec = {
+var plot_id603870225_spec = {
   "data": [
     {
       "name": ".0/count1/stack2",
@@ -461,7 +461,7 @@ var plot_id520730690_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id520730690").parseSpec(plot_id520730690_spec);
+ggvis.getPlot("plot_id603870225").parseSpec(plot_id603870225_spec);
 </script></p>
 <p>We can even chain in the <code>melt</code> function from <code>reshape2</code>. This code is getting a little unruly, but it works.</p>
 <pre class="r"><code>library(reshape2)
@@ -488,33 +488,33 @@ vis %&gt;%
       labels = list(fontSize = 16)
     )
   ) %&gt;%
-  add_axis(&quot;y&quot;, title = &quot;unweighted mean kWh&quot;, title_offset = 70,
+  add_axis(&quot;y&quot;, title = &quot;Unweighted mean kWh&quot;, title_offset = 70,
     properties = axis_props(
       title = list(fontSize = 18),
       labels = list(fontSize = 16)
     )
   )</code></pre>
-<p><div id="plot_id388415870-container" class="ggvis-output-container">
-<div id="plot_id388415870" class="ggvis-output"></div>
+<p><div id="plot_id262044423-container" class="ggvis-output-container">
+<div id="plot_id262044423" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id388415870_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id388415870" data-renderer="svg">SVG</a>
+<a id="plot_id262044423_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id262044423" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id388415870_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id388415870" data-renderer="canvas">Canvas</a>
+<a id="plot_id262044423_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id262044423" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id388415870_download" class="ggvis-download" data-plot-id="plot_id388415870">Download</a>
+<a id="plot_id262044423_download" class="ggvis-download" data-plot-id="plot_id262044423">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id388415870_spec = {
+var plot_id262044423_spec = {
   "data": [
     {
       "name": ".0/group_by1/count2/stack3_flat",
@@ -687,7 +687,7 @@ var plot_id388415870_spec = {
       "type": "y",
       "scale": "y",
       "orient": "left",
-      "title": "unweighted mean kWh",
+      "title": "Unweighted mean kWh",
       "titleOffset": 70,
       "layer": "back",
       "grid": true,
@@ -718,10 +718,10 @@ var plot_id388415870_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id388415870").parseSpec(plot_id388415870_spec);
+ggvis.getPlot("plot_id262044423").parseSpec(plot_id262044423_spec);
 </script></p>
 <p>It looks like <a href="https://github.com/rstudio/ggvis/issues/164"><code>ggivs</code> does not yet support grouped (side-by-side) bar plots</a>, so for now we’ll have to stick with two bar plots, one for the weighted and one for the unweighted means.</p>
-<p>Now let’s remake the smoothed scatter plots. <a href="http://ggvis.rstudio.com/ggplot2.html"><code>ggvis</code> does not currently support faceting</a>, but we can still make a plot that groups by region. We’ll call <code>gam</code> from the <code>mgcv</code> package. Note that we don’t need to load the <code>mgcv</code> package first if we use <code>mgcv::gam</code>, which tells R where to find the <code>gam</code> function. This is a general property of the R language, and not specific to any package.</p>
+<p>Now let’s remake the smoothed scatter plots. <a href="http://ggvis.rstudio.com/ggplot2.html"><code>ggvis</code> does not currently support faceting</a>, but we can still make a plot that uses color to group by region. In this case, instead of calling <code>color</code>, we’ll use both <code>fill</code> and <code>stroke</code>. We’ll also call <code>gam</code> from the <code>mgcv</code> package. Note that we don’t need to load the <code>mgcv</code> package first if we use <code>mgcv::gam</code>. This is R’s scope resolution operator. It is part of the R language, and not specific to any package.</p>
 <pre class="r"><code>vis &lt;- data %&gt;% ggvis(~CDD65, ~KWH, fill=~REGIONC) %&gt;%
   mutate(KWH = KWH^(1/4)) %&gt;%
   layer_points(opacity := 0.075) %&gt;%
@@ -748,27 +748,27 @@ vis %&gt;%
       labels = list(fontSize = 16)
     )
   )</code></pre>
-<p><div id="plot_id981469248-container" class="ggvis-output-container">
-<div id="plot_id981469248" class="ggvis-output"></div>
+<p><div id="plot_id187681914-container" class="ggvis-output-container">
+<div id="plot_id187681914" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id981469248_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id981469248" data-renderer="svg">SVG</a>
+<a id="plot_id187681914_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id187681914" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id981469248_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id981469248" data-renderer="canvas">Canvas</a>
+<a id="plot_id187681914_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id187681914" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id981469248_download" class="ggvis-download" data-plot-id="plot_id981469248">Download</a>
+<a id="plot_id187681914_download" class="ggvis-download" data-plot-id="plot_id187681914">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id981469248_spec = {
+var plot_id187681914_spec = {
   "data": [
     {
       "name": ".0/mutate1",
@@ -1038,7 +1038,7 @@ var plot_id981469248_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id981469248").parseSpec(plot_id981469248_spec);
+ggvis.getPlot("plot_id187681914").parseSpec(plot_id187681914_spec);
 </script></p>
 <p>We can also use loess smoothing by calling <code>layer_smooths</code>. We’ll make the bandwith (span) interactive. To use the interactive component, you’ll need to run this in your own R session.</p>
 <pre class="r"><code>vis &lt;- data %&gt;% ggvis(~CDD65, ~KWH, fill=~REGIONC) %&gt;%
@@ -1069,27 +1069,27 @@ vis %&gt;%
       labels = list(fontSize = 16)
     )
   )</code></pre>
-<p><div id="plot_id850468896-container" class="ggvis-output-container">
-<div id="plot_id850468896" class="ggvis-output"></div>
+<p><div id="plot_id247175612-container" class="ggvis-output-container">
+<div id="plot_id247175612" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id850468896_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id850468896" data-renderer="svg">SVG</a>
+<a id="plot_id247175612_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id247175612" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id850468896_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id850468896" data-renderer="canvas">Canvas</a>
+<a id="plot_id247175612_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id247175612" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id850468896_download" class="ggvis-download" data-plot-id="plot_id850468896">Download</a>
+<a id="plot_id247175612_download" class="ggvis-download" data-plot-id="plot_id247175612">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id850468896_spec = {
+var plot_id247175612_spec = {
   "data": [
     {
       "name": ".0/mutate1",
@@ -1403,14 +1403,14 @@ var plot_id850468896_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id850468896").parseSpec(plot_id850468896_spec);
+ggvis.getPlot("plot_id247175612").parseSpec(plot_id247175612_spec);
 </script></p>
 </div>
 <div id="exercises" class="section level1">
 <h1><span class="header-section-number">3</span> Exercises</h1>
 <ol style="list-style-type: decimal">
-<li>Make a histogram of <code>KWH</code> with interactive bin width. You can consult the <a href="http://ggvis.rstudio.com/cookbook.html"><code>ggvis</code> cookbook</a> to find a histogram example, and the <a href="http://ggvis.rstudio.com/interactivity.html">interactivity</a> page to find interactive controls.</li>
-<li>Re-write the code for the bar plots above, splitting the code for <code>vis</code> into two steps: 1) creating a dataset, and 2) giving the dataset to <code>ggvis</code>. This is similar to the steps we took in the previous tutorial.</li>
+<li>Make a histogram of <code>KWH</code> with interactive bin width. You can consult the <a href="http://ggvis.rstudio.com/cookbook.html"><code>ggvis</code> cookbook</a> to find histogram examples, and the <a href="http://ggvis.rstudio.com/interactivity.html">interactivity</a> page to find interactive controls.</li>
+<li>Re-write the code for the bar plots above, splitting the code for <code>vis</code> into two steps: 1) creating a dataset, called <code>dat</code>, and 2) passing <code>dat</code> to <code>ggvis</code> to create <code>vis</code>. This is similar to the steps we took in the previous tutorial.</li>
 <li>Add interactive controls to the smoothing plots to control the size of the dots.</li>
 <li>Add any other interactive components you want, and experiment with other types of plots.</li>
 </ol>

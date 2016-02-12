@@ -16,7 +16,7 @@ These notes go over some aspects of:
 
 I might also put together notes on visualizing missing data with `pheatmap` and `mi`.
 
-To run tutorials 0-3, it would be easiest to clone the [repository](https://github.com/bdsegal/BSA-computing-workshop).
+To run tutorials 1-4, it would be easiest to clone the [repository](https://github.com/bdsegal/BSA-computing-workshop).
 
 Feel free to contact me at bdsegal@umich.edu if you have any questions.
 

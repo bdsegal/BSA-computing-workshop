@@ -1,5 +1,5 @@
 ---
-title: "Faster operations with `readr`, `dplyr` and `data.table` (draft)"
+title: "Manipulating data quickly with `dplyr` and `data.table` (draft)"
 date: "Feb 12, 2016"
 number_sections: yes
 ---
@@ -13,18 +13,20 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 
 ## `dplyr`
 
-To do: Introduce `dplyr` syntax and aims (focus is on syntax and organizing the analyst's tasks)
+To do: Introduce `dplyr` (focus is on readable syntax and organizing the analyst's tasks)
 
 ## `data.table`
 
-To do: Introduce `data.table` syntax and aims (focus is on speed, memory, and concise syntax).
+To do: Introduce `data.table` (focus is on speed, memory, and concise syntax).
 
 # Example
 
-We'll bootstrap the mean kilowat-hours in the RECS data. For comparisons on larger datasets, please see Matt Dowle's [benchmark](https://github.com/Rdatatable/data.table/wiki/Benchmarks-%3A-Grouping) (this also compares to the pandas library for python).
+We'll bootstrap the mean kilowat-hours in the [2009 RECS](http://www.eia.gov/consumption/residential/data/2009/) data. For comparisons on larger datasets, please see Matt Dowle's [benchmarks](https://github.com/Rdatatable/data.table/wiki/Benchmarks-%3A-Grouping) (this also compares to the pandas library for python).
 
 ```{r}
 parent <- dirname(getwd())
+
+# set the number of Bootstrap resamples
 B <- 10000
 ```
 
@@ -118,7 +120,7 @@ Note: For a more comprehensive comparison, you could repeat the above many times
 
 2. With `dplyr` and `data.table` bootstrap the mean for all numeric variables, grouped by region. Do this with a single call to `dplyr` and `data.table`. The examples in this [stack overflow discussion](http://stackoverflow.com/questions/21435339/data-table-vs-dplyr-can-one-do-something-well-the-other-cant-or-does-poorly) have useful tips, as well as commentary about `dplyr` vs `data.table`.
 
-3. Watch [Grace Hopper explain nanoseconds](https://www.youtube.com/watch?v=JEpsKnWZrJ8)
+3. Watch [Grace Hopper explain nanoseconds](https://www.youtube.com/watch?v=JEpsKnWZrJ8).
 
 ---
 

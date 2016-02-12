@@ -28,9 +28,9 @@ badCol <- unique(prob$col)
 badCol
 ```
 
-There were problems reading in eight columns. There were only `r nrow(prob)` observations with problems, but before proceeding, we should figure out if these problems indicate larger data quality issues, especially if we are interested in the problematic columns. To start, we can consult the RECS documentation, and if necessary, we could get in touch with the EIA staff.
+There were problems reading in eight columns. There were only `r nrow(prob)` observations with problems, but before proceeding, we should figure out if these problems indicate larger data quality issues, especially if we are interested in the problematic columns. To start, we can consult the RECS documentation, and if necessary, we could get in touch with the Energy Information Administration (EIA) staff.
 
-In this case, the Energy Information Administration (EIA) provides a layout file. We can use it to get more information about the problematic columns.
+In this case, EIA provided a layout file. We can use it to get more information about the problematic columns. The rows of the layout file are in the same order as columns of `recs2009.csv`.
 
 ```{r}
 # get the layout file
@@ -41,9 +41,9 @@ badColInfo <- layout[which(layout$Variable.Name %in% badCol),]
 badColInfo
 ```
 
-I've never worked with this data before, but '`r as.character(badColInfo[1,2])`' sounds like it should be restricted to be a non-negative integer. I suspect that most of the data are ok and that there are just few problematic values, but I would look into it further before doing a serious analysis.
+I've never worked with this data before, but '`r as.character(badColInfo[1,2])`' sounds like it should be restricted to be a non-negative integer. I suspect that most of the data are ok and that there are just a few problematic values, but I would look into it further before doing a serious analysis.
 
-Assuming that we determined that the data were ok, let's use the layout file to tell `readr` how to read the data properly. See `vignette("column-types")` for more information about column types (enter the text into an R session after loading the `readr` package).
+Assuming that we determined that the data were ok, let's use the layout file to tell `readr` how to read the data properly. See `vignette("column-types")` for more information about column types (enter `vignette("column-types")` into an R session after loading the `readr` package).
 
 ```{r}
 colTypes <- as.character(layout$Variable.Type)
@@ -56,7 +56,7 @@ data <- read_csv(file.path(parent, 'data', 'recs2009.csv'),
   progress = FALSE)
 ```
 
-This is one way to solve the problem, though now every column is a `double`, so the data take up more space. This isn't a big dataset, so it's not a problem, but in other cases you might want to specify all the numeric columns as `int`, accept for the eight problematic columns.
+This is one way to solve the problem, though now every column is a double, so the data take up more space. This isn't a big dataset, so it's not a problem, but in other cases you might want to specify all the numeric columns as integers, except for the eight problematic columns.
 
 ---
 

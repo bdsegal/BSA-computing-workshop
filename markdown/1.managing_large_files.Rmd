@@ -164,7 +164,7 @@ Depending on your situation, you might also consider:
 
 * Calculating sufficient statistics on a data stream (e.g. by writing a function in C, see Hyun Kang's [BIOSAT 615 class notes](http://genome.sph.umich.edu/wiki/Biostatistics_615/815:_Main_Page), lecture 14, slides 9-13)
 * Converting the data into a Hierarchical Data Format version 5 (HDF5) file and using the `rhdf5` package (see Kerby Shedden's [STAT 506 class notes](http://dept.stat.lsa.umich.edu/~kshedden/Courses/Stat506/large_files/))
-* Storing the dataset in a SQL database, and connecting via `dplyr` or another package (see Hadley Wickham's [vignette for connecting dplyr to remote databases](https://cran.r-project.org/web/packages/dplyr/vignettes/databases.html)). The [`ff`](https://cran.r-project.org/web/packages/ff/index.html) package ('flat file') is another package that works with data stored on disk. These options are probably best if you have a solid state drive (SSD).
+* Storing the dataset in a SQL database, and connecting via `dplyr` or another package (see Hadley Wickham's [vignette for connecting dplyr to remote databases](https://cran.r-project.org/web/packages/dplyr/vignettes/databases.html)). [`ff`](https://cran.r-project.org/web/packages/ff/index.html) is another package that works with data stored on disk. To fully take advantage of these options, it would help to have a solid state drive (SSD).
 * Using a distributed computing system, like Spark or Hadoop (see the schedule of [Advanced Research Computing workshops](http://arc-ts.umich.edu/training-workshops/))
 * Using the [`bigmemory`](https://cran.r-project.org/web/packages/bigmemory/index.html) package to more efficiently store matrices in memory.
 

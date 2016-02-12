@@ -83,8 +83,8 @@ badCol &lt;- unique(prob$col)
 badCol</code></pre>
 <pre><code>## [1] &quot;GALLONFOOTH&quot; &quot;BTUFOOTH&quot;    &quot;DOLFOOTH&quot;    &quot;NUMCORDS&quot;    &quot;BTUKERSPH&quot;  
 ## [6] &quot;DOLKERSPH&quot;   &quot;BTUKEROTH&quot;   &quot;DOLKEROTH&quot;</code></pre>
-<p>There were problems reading in eight columns. There were only 30 observations with problems, but before proceeding, we should figure out if these problems indicate larger data quality issues, especially if we are interested in the problematic columns. To start, we can consult the RECS documentation, and if necessary, we could get in touch with the EIA staff.</p>
-<p>In this case, the Energy Information Administration (EIA) provides a layout file. We can use it to get more information about the problematic columns.</p>
+<p>There were problems reading in eight columns. There were only 30 observations with problems, but before proceeding, we should figure out if these problems indicate larger data quality issues, especially if we are interested in the problematic columns. To start, we can consult the RECS documentation, and if necessary, we could get in touch with the Energy Information Administration (EIA) staff.</p>
+<p>In this case, EIA provided a layout file. We can use it to get more information about the problematic columns. The rows of the layout file are in the same order as columns of <code>recs2009.csv</code>.</p>
 <pre class="r"><code># get the layout file
 layout &lt;- read.csv(&quot;http://www.eia.gov/consumption/residential/data/2009/csv/public_layout.csv&quot;)
 str(layout)</code></pre>
@@ -123,8 +123,8 @@ badColInfo</code></pre>
 ## 901                    901       Numeric      8
 ## 903                    903       Numeric      8
 ## 905                    905       Numeric      8</code></pre>
-<p>I’ve never worked with this data before, but ‘Cords of wood used in 2009 (if more than 5)’ sounds like it should be restricted to be a non-negative integer. I suspect that most of the data are ok and that there are just few problematic values, but I would look into it further before doing a serious analysis.</p>
-<p>Assuming that we determined that the data were ok, let’s use the layout file to tell <code>readr</code> how to read the data properly. See <code>vignette(&quot;column-types&quot;)</code> for more information about column types (enter the text into an R session after loading the <code>readr</code> package).</p>
+<p>I’ve never worked with this data before, but ‘Cords of wood used in 2009 (if more than 5)’ sounds like it should be restricted to be a non-negative integer. I suspect that most of the data are ok and that there are just a few problematic values, but I would look into it further before doing a serious analysis.</p>
+<p>Assuming that we determined that the data were ok, let’s use the layout file to tell <code>readr</code> how to read the data properly. See <code>vignette(&quot;column-types&quot;)</code> for more information about column types (enter <code>vignette(&quot;column-types&quot;)</code> into an R session after loading the <code>readr</code> package).</p>
 <pre class="r"><code>colTypes &lt;- as.character(layout$Variable.Type)
 colTypes &lt;- gsub(&quot;Numeric&quot;,&quot;d&quot;, colTypes) # d for double
 colTypes &lt;- gsub(&quot;Character&quot;,&quot;c&quot;, colTypes) # c for character
@@ -133,7 +133,7 @@ colTypes &lt;- paste(colTypes, collapse=&quot;&quot;) # concatenate into 1 strin
 data &lt;- read_csv(file.path(parent, 'data', 'recs2009.csv'),
   col_types = colTypes,
   progress = FALSE)</code></pre>
-<p>This is one way to solve the problem, though now every column is a <code>double</code>, so the data take up more space. This isn’t a big dataset, so it’s not a problem, but in other cases you might want to specify all the numeric columns as <code>int</code>, accept for the eight problematic columns.</p>
+<p>This is one way to solve the problem, though now every column is a double, so the data take up more space. This isn’t a big dataset, so it’s not a problem, but in other cases you might want to specify all the numeric columns as integers, except for the eight problematic columns.</p>
 <hr />
 <p><a href="https://github.com/bdsegal">Brian Segal</a></p>
 

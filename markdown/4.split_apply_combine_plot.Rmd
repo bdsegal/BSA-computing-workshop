@@ -57,7 +57,7 @@ The result, `classSummary`, is in wide format, i.e. it has one row per class, an
 You will usually need to reshape the dataset from wide to long format before plotting with `ggplot2`. With `reshape2`, this is accomplished with the `melt` function. You can specify the grouping variable with `id.vars`, and the variables you want to plot with `measure.vars`. For example, if we wanted to plot the number of dogs by the number of times dogs ate homework, aggregated at the class level, we would first need to melt `classSummary`.
 
 ```{r, eval = FALSE}
-classSummaryMelt <- melt(classSummary, id.vars = "class", measure.vars = c("numberOfDogs", "timesDogAteHw")
+classSummaryMelt <- melt(classSummary, id.vars = "class", measure.vars = c("numberOfDogs", "timesDogAteHw"))
 ```
 
 `classSummaryMelt` has three columns:
@@ -66,9 +66,11 @@ classSummaryMelt <- melt(classSummary, id.vars = "class", measure.vars = c("numb
   * `variable`, which identifies the measured variables `numberOfDogs` and `timesDogAteHw`
   * `value`, which contains the value for each class/variable combination
 
-If you don't specify `measure.vars`, `melt` assumes that all variables except for the `id.vars` are measured variables. Frequently, you don't need to specify the `id.vars` either.
+Please see below for an example.
 
-You can also use `reshape2` to go from long to wide format with `dcast` for data frames and `acast` for arrays, though we won't cover that here. When going from long to wide format, you can aggregate by specifying the `fun.aggregate` function.
+If you don't specify `measure.vars`, `melt` assumes that all variables except for the `id.vars` are measured variables. Frequently, you don't need to specify the `id.vars` either. 
+
+You can also use `reshape2` to go from long to wide format with `dcast` for data frames and `acast` for arrays, though we won't cover that here. When going from long to wide format, you can aggregate by specifying a `fun.aggregate` function.
 
 ## Plot with `ggplot2`
 
@@ -76,11 +78,11 @@ You can also use `reshape2` to go from long to wide format with `dcast` for data
 
 In `ggplot2`, plots are composed of layers, and each layer must contain at least the following components:
 
-  * Aesthetic (aes), e.g. `aes(x = x, y = y)`
+  * Aesthetic (`aes`), e.g. `aes(x = xInData, y = yInData)`
   * Data, `data = myData`
   * Geometric object, e.g. `geom_point`, `geom_line`
 
-There are many other options, some of which we'll show below. You also don't have to re-specify all components for each layer, unless they change.
+There are several other options, some of which we'll use in the examples below. You also don't have to re-specify all components for each layer, unless they change.
 
 There are two ways to create a plot:
 
@@ -99,7 +101,7 @@ We'll use both `qplot` and `ggplot` below. While `qplot` is more concise, it isn
 
 # Examples
 
-In this example, we'll use several aspects of `ggplot2` that I didn't mention above. I'll explain these as we go.
+In these example, we'll use several aspects of `ggplot2` that I didn't mention above. I'll explain these in the workshop as we go.
 
 Let's take a look at the electricity consumption data in killowat-hours (`KWH`). We'll also use the the sampling weights, `NWEIGHT`, and [U.S. Census regions](http://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf) `REGIONC`. There are a few parsing errors, which I deal with in a separate tutorial. For now, we can ignore the errors.
 
@@ -159,9 +161,9 @@ ggplot(aes(x = CDD65, y = KWH^(1/4)), data = data)+
   labs(y = expression("kWh"^"1/4"), x = "Cooling days (base temp 65 F)")
 ```
 
-I use a 1/4 scaling factor to induce normality for `KWH`, which makes the standard errors more reliable for the smoothing estimates. We'll talk more about this and `geom_smooth` below. We'll also plot `KWH` on it's original scale.
+I used a 1/4 scaling factor to induce normality for `KWH`, which makes the standard errors more reliable for the smoothing estimates. We'll talk more about this and `geom_smooth` below. We'll also plot `KWH` on it's original scale.
 
-For a more direct visual comparison, instead of faceting by region, let's use color to group by region.
+For a more direct visual comparison, instead of faceting by region, let's use `color` to group by region.
 
 ```{r}
 ggplot(aes(x = CDD65, y = KWH^(1/4), color = REGIONC), data = data)+
@@ -174,7 +176,7 @@ ggplot(aes(x = CDD65, y = KWH^(1/4), color = REGIONC), data = data)+
 
 Even after adjusting for cooling days, the south seems to use more electricity.
 
-Now for that 1/4 scaling factor. First let's look at a histogram of `KWH`.
+Now for that 1/4 scaling factor. Let's look at a histogram of `KWH`.
 
 ```{r}
 qplot(x = data$KWH, geom = "histogram", xlab = "kWh")+
@@ -207,6 +209,7 @@ ggplot(aes(x = KWH^(1/4)), data = data)+
 ```
 
 We could also make the lines thicker and fill in the kernel density estimator.
+
 ```{r}
 ggplot(aes(x = KWH^(1/4)), data = data)+
   geom_density(color = "grey", fill = "grey", size = 1)+
@@ -218,13 +221,14 @@ ggplot(aes(x = KWH^(1/4)), data = data)+
 ```
 
 We can also look at a q-q plot.
+
 ```{r}
 ggplot(aes(sample = KWH^(1/4)), data = data)+
   stat_qq()+
   theme_classic(18)
 ```
 
-Scaling the outcome is convenient for mathematical reasons, but it makes interpretation difficult. The gamma distribution is a flexible choice for this type of data, and it seems to describe the distribution of `KWH` well. We should check the mean-variance relationship, but we'll assume it's ok for now.
+Scaling the outcome is convenient for mathematical reasons, but it makes interpretation difficult. The gamma distribution is a flexible choice for this type of data, and seems to describe the unconditional distribution of `KWH` well. We should also check the mean-variance relationship and the conditional distribution of `KWH` given `CDD65`, but we'll assume they're ok for now.
 
 ```{r}
 # estimate parameters of gamma with method of moments
@@ -241,7 +245,7 @@ ggplot(aes(x = KWH), data = data)+
   labs(x = "kWh", y = "Density")
 ```
 
-Then we can repeat make the same plots as above, but on the original scale, and ask the `gam` function to use the Gamma distribution to fit the smooth.
+Then we can make the same plots as above, but on the original scale, and ask the `gam` function to use the gamma distribution to fit the smooth.
 
 ```{r, warning=TRUE, message=TRUE}
 ggplot(aes(x = CDD65, y = KWH, color = REGIONC), data = data)+
@@ -255,7 +259,7 @@ ggplot(aes(x = CDD65, y = KWH, color = REGIONC), data = data)+
 
 The `gam` algorithm didn't converge, so these smooths might not be quite right, but they seem reasonable for exploratory purposes. We also didn't use the sampling weights in the smooth.
 
-For more than 1,000 observations, `geom_smooth` calls the `gam` function from SImon Wood's [`mgcv`](https://cran.r-project.org/web/packages/mgcv/mgcv.pdf) package. `gam` stands for generalized additive model, but in this case, the smooth is a function of only one variable -- cooling days. `gam` uses cubic regression splines by default, so the smooths in the plots above are cubic regression splines within each region. As an aside, I highly recommend Simon Wood's textbook, [Generalized Additive Models: An Introduction with R](https://www.crcpress.com/Generalized-Additive-Models-An-Introduction-with-R/Wood/9781584884743).
+For more than 1,000 observations, `geom_smooth` calls the `gam` function from Simon Wood's [`mgcv`](https://cran.r-project.org/web/packages/mgcv/mgcv.pdf) package. `gam` stands for generalized additive model, but in this case, the smooth is a function of only one variable -- cooling days. `gam` uses cubic regression B-splines by default, so the smooths in the plots above are cubic regression B-splines within each region. As an aside, I highly recommend Simon Wood's textbook, [Generalized Additive Models: An Introduction with R](https://www.crcpress.com/Generalized-Additive-Models-An-Introduction-with-R/Wood/9781584884743).
 
 # Common mistakes
 
@@ -266,12 +270,12 @@ For more than 1,000 observations, `geom_smooth` calls the `gam` function from SI
 **dplyr**
 
 1. Alter the `dplyr` call above to group by both `REGIONC` and `DIVISON`.
-2. Use `n=n()` in `summarize` to get the number of households in each region/division
-3. Instead of summarizing the data, add columns with `mutate` and `transmute`
+2. Use `n=n()` in `summarize` to get the number of households in each region/division.
+3. Instead of summarizing the data, add columns with `mutate` and `transmute`.
 
 **reshape2**
 
-4. Melt the data frame from exercise 2, but use both REGIONC and 'DIVISON' as `id.vars`.
+4. Melt the data frame from exercise 2, but use both `REGIONC` and `DIVISON` as `id.vars`.
 
 **ggplot2**
 

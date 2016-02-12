@@ -10,11 +10,11 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 # Getting started
 
-To follow along, please download the datasets in the previous tutorial, and place all downloaded files in a folder called `data` at the same level as the working directory. Alternatively, you could change `dataPath` in the first code block to point to the location of the data. You could also clone the [repository](https://github.com/bdsegal/BSA-computing-workshop) and run the 'download_files.R' script in the `data` folder.
+To follow along, please download the datasets in the previous tutorial, and place all downloaded files in a folder called `data` at the same level as the working directory. Alternatively, you could change `dataPath` in the first code block to point to the location of the data. You could also clone the [repository](https://github.com/bdsegal/BSA-computing-workshop) and run the `download_files.R` script in the `data` folder.
 
 # Managing files
 
-Managing files from within R can be useful in some situations, like making reproducible reports.
+Managing files from within R can be useful in some situations, like making reproducible reports. Let's see what's in our data folder.
 
 ```{r}
 parent <- dirname(getwd())
@@ -45,7 +45,7 @@ So the `recs2009.csv` file is `r round(size/1e6)` MB -- a very manageable size.
 
 # Reading in data
 
-Base R functions and data structures, such as `read.csv` and data frames, are fine for most datasets. However, for larger datasets, the `readr` and `data.table` packages are noticeably faster.
+Base R functions and data structures, such as `read.csv` and `data.frame`, are fine for most datasets. However, for larger datasets, the `readr` and `data.table` packages are noticeably faster.
 
 ```{r}
 # install.packages(c("readr", "data.table"))

@@ -1,0 +1,64 @@
+---
+title: "Assessing parsing errors from `readr`"
+date: "Feb 12, 2016"
+number_sections: yes
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+```
+
+Let's load the data from the [2009 residential energy consumption survey (RECS)](http://www.eia.gov/consumption/residential/data/2009/index.cfm?view=microdata). As described on the website, the 2009 RECS included 12,083 households selected at random using a complex multistage, area-probability sample design.
+
+```{r, warning=FALSE, message=FALSE}
+library(readr)
+
+parent <- dirname(getwd())
+dataPath <- file.path(parent, "data")
+
+# download the data if it doesn't already exist
+if(!file.exists(file.path(parent, "data", "recs2009.csv"))){
+  download.file(url = "http://www.eia.gov/consumption/residential/data/2009/csv/recs2009_public.csv",
+    mode = "wb",
+    destfile=file.path(dataPath, "recs2009.csv"))
+}
+
+data <- read_csv(file.path(dataPath, "recs2009.csv"), progress = FALSE)
+prob <- problems(data)
+badCol <- unique(prob$col)
+badCol
+```
+
+There were problems reading in eight columns. There were only `r nrow(prob)` observations with problems, but before proceeding, we should figure out if these problems indicate larger data quality issues, especially if we are interested in the problematic columns. To start, we can consult the RECS documentation, and if necessary, we could get in touch with the Energy Information Administration (EIA) staff.
+
+In this case, EIA provided a layout file. We can use it to get more information about the problematic columns. The rows of the layout file are in the same order as columns of `recs2009.csv`.
+
+```{r}
+# get the layout file
+layout <- read.csv("http://www.eia.gov/consumption/residential/data/2009/csv/public_layout.csv")
+str(layout)
+
+badColInfo <- layout[which(layout$Variable.Name %in% badCol),]
+badColInfo
+```
+
+I've never worked with this data before, but '`r as.character(badColInfo[1,2])`' sounds like it should be restricted to be a non-negative integer. I suspect that most of the data are ok and that there are just a few problematic values, but I would look into it further before doing a serious analysis.
+
+Assuming that we determined that the data were ok, let's use the layout file to tell `readr` how to read the data properly. See `vignette("column-types")` for more information about column types (enter `vignette("column-types")` into an R session after loading the `readr` package).
+
+```{r}
+colTypes <- as.character(layout$Variable.Type)
+colTypes <- gsub("Numeric", "d", colTypes) # d for double
+colTypes <- gsub("Character", "c", colTypes) # c for character
+colTypes <- paste(colTypes, collapse = "") # concatenate into 1 string
+
+data <- read_csv(file.path(dataPath, "recs2009.csv"),
+  col_types = colTypes,
+  progress = FALSE)
+```
+
+This is one way to solve the problem, though now every column is a double, so the data take up more space. This isn't a big dataset, so it's not a problem, but in other cases you might want to specify all the numeric columns as integers, except for the eight problematic columns.
+
+---
+
+[Brian Segal](https://github.com/bdsegal)

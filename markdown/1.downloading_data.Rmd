@@ -1,0 +1,73 @@
+---
+title: "Tips for downloading data in R"
+date: "Feb 12, 2016"
+number_sections: yes
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, eval=FALSE)
+```
+
+# Avoid hard-coding directory paths
+
+This is more of a general tip for reproducibility. For example, we can reference directories at the same level as the working directory by getting the parent directory
+
+```{r}
+parent <- dirname(getwd())
+dataPath <- file.path(parent, "data")
+```
+
+and then using `file.path` to create the file path. Use `file.path` instead of `paste` to write platform indepedent code. Please see the examples below.
+
+# csv files
+
+For csv files, we need to set `mode = "wb"` to tell R to write a binary file. Otherwise `download.file` adds an extra space between records.
+
+```{r}
+# EIA residential energy consumption survey (RECS) 27 MB
+download.file(url = "http://www.eia.gov/consumption/residential/data/2009/csv/recs2009_public.csv",
+  mode = "wb",
+  destfile = file.path(dataPath, "recs2009.csv"))
+```
+
+# zip files
+
+To download zip files, we don't need any additional arguments for `download.file`.
+
+```{r}
+# Porto taxi cab data, 520 MB zip file
+download.file(url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00339/train.csv.zip",
+  destfile = file.path(dataPath, "train.zip"))
+```
+
+We'll unzip the file for demonstration, but this isn't necessary, because R's read functions accept zipped files. By default, `unzip` does not remove the original zip file. 
+
+```{r}
+setwd(dataPath)
+unzip("train.zip")
+```
+
+# gz files
+
+Downloading gz files is the same as for zip files.
+
+```{r}
+# weather data, 206 MB gz file
+download.file(url = "http://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_year/2010.csv.gz",
+  mode = "wb",
+  destfile=file.path(dataPath, "2010.csv.gz"))
+```
+
+To unzip gz files, you need the `R.utils` package, though as for zip files, this usually isn't necessary. `unzip` removes the original gz file by default, but you can set `remove = FALSE` to keep the gz file.
+
+```{r}
+ifelse(!require(R.utils), install.packages("R.utils"), "already installed")
+library(R.utils)
+
+setwd(dataPath)
+gunzip("2010.csv.gz", remove = FALSE)
+```
+
+---
+
+[Brian Segal](https://github.com/bdsegal)

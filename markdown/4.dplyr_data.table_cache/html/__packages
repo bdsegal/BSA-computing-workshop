@@ -1,0 +1,7 @@
+base
+rmarkdown
+readr
+data.table
+dplyr
+reshape2
+ggplot2

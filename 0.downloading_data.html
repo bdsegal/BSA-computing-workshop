@@ -83,30 +83,33 @@ img {
 <h1><span class="header-section-number">2</span> csv files</h1>
 <p>For csv files, we need to set <code>mode=&quot;wb&quot;</code> to tell R to write a binary file. Otherwise <code>download.file</code> adds an extra space between records.</p>
 <pre class="r"><code># EIA residential energy consumption survey (RECS) 27 MB
-download.file(url=&quot;http://www.eia.gov/consumption/residential/data/2009/csv/recs2009_public.csv&quot;,
-  mode=&quot;wb&quot;,
-  destfile=file.path(parent,'data','recs2009.csv'))</code></pre>
+download.file(url = &quot;http://www.eia.gov/consumption/residential/data/2009/csv/recs2009_public.csv&quot;,
+  mode = &quot;wb&quot;,
+  destfile = file.path(parent, &quot;data&quot;, &quot;recs2009.csv&quot;))</code></pre>
 </div>
 <div id="zip-files" class="section level1">
 <h1><span class="header-section-number">3</span> zip files</h1>
 <p>To download zip files, we don’t need any additional arguments to <code>download.file</code></p>
 <pre class="r"><code># Porto taxi cab data, 520 MB zip file
-download.file(url=&quot;https://archive.ics.uci.edu/ml/machine-learning-databases/00339/train.csv.zip&quot;,
-  destfile=file.path(parent,'data','train.zip', sep=&quot;&quot;))</code></pre>
+download.file(url = &quot;https://archive.ics.uci.edu/ml/machine-learning-databases/00339/train.csv.zip&quot;,
+  destfile = file.path(parent, &quot;data&quot;, &quot;train.zip&quot;))</code></pre>
 <p>We’ll unzip the file for demonstration, but this isn’t necessary, because R’s read functions accept zipped files. By default, <code>unzip</code> does not remove the original zip file.</p>
-<pre class="r"><code>unzip(&quot;train.zip&quot;)</code></pre>
+<pre class="r"><code>setwd(file.path(parent, &quot;data&quot;))
+unzip(&quot;train.zip&quot;)</code></pre>
 </div>
 <div id="gz-files" class="section level1">
 <h1><span class="header-section-number">4</span> gz files</h1>
 <p>Downloading gz files is the same as zip files.</p>
 <pre class="r"><code># weather data, 206 MB gz file
-download.file(url=&quot;http://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_year/2010.csv.gz&quot;,
-  mode=&quot;wb&quot;,
-  destfile=file.path(parent, 'data', '2010.csv.gz'))</code></pre>
-<p>To unzip gz files, you need the <code>R.utils</code> package, though as for zip files, this usually isn’t necessary. <code>unzip</code> removes the original gz file by default, but you can set <code>remove=FALSE</code> to keep the gz file.</p>
+download.file(url = &quot;http://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_year/2010.csv.gz&quot;,
+  mode = &quot;wb&quot;,
+  destfile=file.path(parent, &quot;data&quot;, &quot;2010.csv.gz&quot;))</code></pre>
+<p>To unzip gz files, you need the <code>R.utils</code> package, though as for zip files, this usually isn’t necessary. <code>unzip</code> removes the original gz file by default, but you can set <code>remove = FALSE</code> to keep the gz file.</p>
 <pre class="r"><code>ifelse(!require(R.utils), install.packages(&quot;R.utils&quot;), &quot;already installed&quot;)
 library(R.utils)
-gunzip(&quot;2010.csv.gz&quot;, remove=FALSE)</code></pre>
+
+setwd(file.path(parent, &quot;data&quot;))
+gunzip(&quot;2010.csv.gz&quot;, remove = FALSE)</code></pre>
 <hr />
 <p><a href="https://github.com/bdsegal">Brian Segal</a></p>
 </div>

@@ -77,11 +77,11 @@ img {
 
 <div id="getting-started" class="section level1">
 <h1><span class="header-section-number">1</span> Getting started</h1>
-<p>To follow along, please download the datasets in the previous tutorial, and place all downloaded files in a folder called <code>data</code> at the same level as the working directory. Alternatively, you could change <code>dataPath</code> in the first code block to point to the location of the data. You could also clone the <a href="https://github.com/bdsegal/BSA-computing-workshop">repository</a> and run the ‘download_files.R’ script in the <code>data</code> folder.</p>
+<p>To follow along, please download the datasets in the previous tutorial, and place all downloaded files in a folder called <code>data</code> at the same level as the working directory. Alternatively, you could change <code>dataPath</code> in the first code block to point to the location of the data. You could also clone the <a href="https://github.com/bdsegal/BSA-computing-workshop">repository</a> and run the <code>download_files.R</code> script in the <code>data</code> folder.</p>
 </div>
 <div id="managing-files" class="section level1">
 <h1><span class="header-section-number">2</span> Managing files</h1>
-<p>Managing files from within R can be useful in some situations, like making reproducible reports.</p>
+<p>Managing files from within R can be useful in some situations, like making reproducible reports. Let’s see what’s in our data folder.</p>
 <pre class="r"><code>parent &lt;- dirname(getwd())
 dataPath &lt;- file.path(parent, 'data')
 
@@ -111,7 +111,7 @@ size/1e6</code></pre>
 </div>
 <div id="reading-in-data" class="section level1">
 <h1><span class="header-section-number">3</span> Reading in data</h1>
-<p>Base R functions and data structures, such as <code>read.csv</code> and data frames, are fine for most datasets. However, for larger datasets, the <code>readr</code> and <code>data.table</code> packages are noticeably faster.</p>
+<p>Base R functions and data structures, such as <code>read.csv</code> and <code>data.frame</code>, are fine for most datasets. However, for larger datasets, the <code>readr</code> and <code>data.table</code> packages are noticeably faster.</p>
 <pre class="r"><code># install.packages(c(&quot;readr&quot;, &quot;data.table&quot;))
 library(readr)
 library(data.table)</code></pre>

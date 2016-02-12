@@ -12,7 +12,7 @@ These notes go over some aspects of:
 
 I might also put together notes on visualizing missing data with `pheatmap` and `mi`.
 
-All html files are in the `html` folder, and the R markdown files are in the `markdown` folder.
+All html files are in the `html` folder, and the R markdown files are in the `markdown` folder. You can also view the html files [here](http://bdsegal.github.io/BSA-computing-workshop/).
 
 To run tutorials 1-4, you'll either need to replicate the directory structure on your computer or change the path to the data folder. One way to replicate the directory structure is to clone this repository.
 

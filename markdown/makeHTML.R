@@ -3,14 +3,10 @@
 # and then installs it if it isn't. You need to use the require() function
 # for this. library() does not return any values; require() returns FALSE
 # if the package isn't loaded successfully, and TRUE if it is.
-# For more info, Karl Broman's tutorial is excellent: http://kbroman.org/knitr_knutshell/
+# For more info, I recommend Karl Broman's tutorial: http://kbroman.org/knitr_knutshell/
 
 # ifelse(!require(installr), install.packages("installr"), "already installed")
 # install.pandoc()
-
-
-# To do:  remove missing data example from 2. -- or make it it's own tutorial
-#         make 3 and 5
 
 library(rmarkdown)
 
@@ -63,5 +59,3 @@ render("5.ggvis.Rmd",
   output_file = "5.ggvis.html")
 
 browseURL(paste('file://', file.path(parent, 'html','5.ggvis.html'), sep=''))
-
-

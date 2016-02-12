@@ -58,25 +58,3 @@ data <- read_csv(file.path(parent, 'data', 'recs2009.csv'),
 ```
 
 This is one way to solve the problem, though now every column is a `double`, so the data take up more space. This isn't a big dataset, so it's not a problem, but in other cases you might want to specify all the numeric columns as `int`, accept for the eight problematic columns.
-
-
-
-
-
-We should also take a look at the missing data patterns before moving on. We'll use the [`pheatmap`](https://cran.r-project.org/web/packages/pheatmap/index.html) package to visualize the first few rows of missing data. The [`mi`](https://cran.r-project.org/web/packages/mi/index.html) package is also useful for inspecting missing data patterns, though it seems to work best for smaller datasets.
-
-```{r, eval=FALSE}
-library(pheatmap)
-
-dataNA <- is.na(data)
-mode(dataNA) <- "integer"
-pheatmap(dataNA[1:500,], cluster_rows = FALSE, cluster_cols = FALSE)
-```
-
-```{r, eval=FALSE}
-colsWithNA <- which(apply(is.na(data), 2, sum) > 0)
-colsWithNA
-barplot(colsWithNA)
-```
-
-We should keep these variables in mind when we analyze the data, because the missingess might introduce bias.

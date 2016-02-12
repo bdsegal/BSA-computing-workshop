@@ -1,5 +1,5 @@
 ---
-title: "Managing large files"
+title: "Managing large desktop-sized files"
 author: "Brian Segal"
 date: "Feb 12, 2016"
 number_sections: yes
@@ -11,7 +11,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 # Getting started
 
-If you haven't already, please run the `download_files.R` script within the `data` folder. This will download two datasets, described below, and place them in the `data` folder.
+Please run the `download_files.R` script in the main folder. This will download datasets, described below, and place them in the `data` folder.
 
 # Managing files
 
@@ -53,7 +53,7 @@ library(readr)
 library(data.table)
 ```
 
-At `r round(size/1e6)` MB, the `recs2009.csv` file isn't too large for base functions, but the `readr` and `data.table` packages are faster.
+At `r round(size/1e6)` MB, the `recs2009.csv` file isn't large. However, if we were working with many files of this size, `readr` and `data.table` would save a lot of time.
 
 ```{r, cache = TRUE, warning=TRUE}
 # Compare read-in times
@@ -157,19 +157,21 @@ str(train)
 
 Gawk is a GNU implementation of awk, a command line file processing tool for Unix. For more information, see [http://www.gnu.org/software/gawk](http://www.gnu.org/software/gawk). To install gawk on Windows OS, see [http://gnuwin32.sourceforge.net/packages/gawk.htm](http://gnuwin32.sourceforge.net/packages/gawk.htm).
 
-This is a quick way to peak at large datasets with R. However, the subset might be a biased sample from the full dataset, especially if the variables (columns) have non-random trends across the observations (rows). In some cases, you might be able to repeat the same analysis with multiple samples, and then aggregate the results. Ariel Kleiner, et al.'s [Bag of Little Bootstraps](http://arxiv.org/abs/1112.5016) is an example of this approach. I think it was developed with a distributed computing system in mind (noted below), but you could also implement it on desktop.
+This is a quick way to peak at large datasets with R. However, the subset might be a biased sample from the full dataset, especially if the variables (columns) have non-random trends across the observations (rows). In some cases, you might be able to repeat the same analysis with multiple samples, and then aggregate the results. Ariel Kleiner, et al.'s [Bag of Little Bootstraps](http://arxiv.org/abs/1112.5016) is an example of this approach. I think it was developed with a distributed computing system in mind, but you could also implement it on desktop.
 
 Depending on your situation, you might also consider:
 
 * Calculating sufficient statistics on a data stream (e.g. by writing a function in C, see Hyun Kang's [BIOSAT 615 class notes](http://genome.sph.umich.edu/wiki/Biostatistics_615/815:_Main_Page), lecture 14, slides 9-13)
 * Converting the data into a Hierarchical Data Format version 5 (HDF5) file and using the `rhdf5` package (see Kerby Shedden's [STAT 506 class notes](http://dept.stat.lsa.umich.edu/~kshedden/Courses/Stat506/large_files/))
-* Storing the dataset in a SQL database, and connecting via `dplyr` or another package (see Hadley Wickham's [vignette for connecting dplyr to remote databases](https://cran.r-project.org/web/packages/dplyr/vignettes/databases.html))
+* Storing the dataset in a SQL database, and connecting via `dplyr` or another package (see Hadley Wickham's [vignette for connecting dplyr to remote databases](https://cran.r-project.org/web/packages/dplyr/vignettes/databases.html)). The `ff` package, for 'flat file', is another package that works with data stored on disk. These options are probably best if you have a solid state drive (SSDs).
 * Using a distributed computing system, like Spark or Hadoop (see the schedule of [Advanced Research Computing workshops](http://arc-ts.umich.edu/training-workshops/))
+* Using the `bigmemory` package to more efficiently store matrices in memory.
 
 # Other notes/tips
 
-* When working with large files, you can monitor memory use with the Windows task manager.
+* When working with large files, you can monitor memory use with the windows task manager.
 * The POLYLINE variable in the `train.csv` dataset is in JSON format. You can use an R package, such as `json`, to parse this variable.
+* If you want to experiment with terabyte sized data, take a look at the [Amazon Web Services (AWS) public data sets](http://aws.amazon.com/datasets/). You can set up an AWS account (free for the first year, I think) and work with these datasets through AWS.
 
 # Exercises
 

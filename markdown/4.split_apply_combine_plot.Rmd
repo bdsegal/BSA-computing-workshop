@@ -8,6 +8,7 @@ number_sections: yes
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 ```
+
 # Introduction
 
 In this tutorial, we will focus on three R packages from Hadley Wickham that are typically used together: `dplyr` (split, apply, combine), `reshape2` (reshape), and `ggplot2` (plot). There are several good tutorials for these packages (see Hadley Wickham's [Introduction to `dplyr`](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html), Sean Anderson's [Introduction to `reshape2`](http://seananderson.ca/2013/10/19/reshape.html), and Hadley Wickham's [website for the `reshape`](http://had.co.nz/reshape/). Wickham's [website for `ggplot2`](http://docs.ggplot2.org/current/) describes all of the options and gives many examples. Since there are so many existing resources for `dplyr`, `reshape2`, and `ggplot2`, I thought it would be most helpful to give a brief overview of each, and then jump into some examples where we use them together.
@@ -70,7 +71,7 @@ If you don't specify `measure.vars`, `melt` assumes that all variables except fo
 
 You can also use `reshape2` to go from long to wide format with `dcast` for data frames and `acast` for arrays, though we won't cover that here. When going from long to wide format, you can aggregate by specifying the `fun.aggregate` function.
 
-## Plotting with `ggplot2`
+## Plot with `ggplot2`
 
 `ggplot2` is based on Leland Wilkinson's [Grammar of Graphics](https://www.cs.uic.edu/~wilkinson/TheGrammarOfGraphics/GOG.html), which is also the basis for the [Bokeh](http://bokeh.pydata.org/en/latest/) library for Python.
 
@@ -97,13 +98,13 @@ ggplot(aes(x = age, y = greyHair), data = myData)+
 
 We'll use both `qplot` and `ggplot` below. While `qplot` is more concise, it isn't as flexible as `ggplot`.
 
-# Example
+# Examples
 
 In this example, we'll use several aspects of `ggplot2` that I didn't mention above. I'll explain these as we go.
 
-Let's take a look at the electricity consumption data in killowat-hours (KWH). We'll also use the the sampling weights, `NWEIGHT`, and [U.S. Census regions](http://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf) `REGIONC`. There are a few parsing errors, which I deal with in [link to tutorial]. For now, we can ignore the errors.
+Let's take a look at the electricity consumption data in killowat-hours (KWH). We'll also use the the sampling weights, `NWEIGHT`, and [U.S. Census regions](http://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf) `REGIONC`. There are a few parsing errors, which I deal with in a separate tutorial: 2. Assessing parsing errors. For now, we can ignore the errors.
 
-```{r, warning = TRUE, message = FALSE}
+```{r, warning = TRUE, message = TRUE}
 library(readr)
 data <- read_csv("http://www.eia.gov/consumption/residential/data/2009/csv/recs2009_public.csv",
   progress=FALSE)
@@ -148,7 +149,7 @@ ggplot(aes(x = factor(REGIONC), y = value, fill = variable), data = KwhByRegionM
 
 It looks like the South uses a lot of electricity. Is it because they have a lot of [cooling degree days](http://www.srh.noaa.gov/key/?n=climate_heat_cool) `CDD65`?
 
->Note: I use a 1/4 scaling factor to induce normality for `KWH`, which makes the standard errors more reliable for the smoothing estimates. We'll talk more about this and `geom_smooth` below.
+>Note: I use a 1/4 scaling factor to induce normality for `KWH`, which makes the standard errors more reliable for the smoothing estimates. We'll talk more about this and `geom_smooth` below. We'll also plot `KWH` on it's original scale.
 
 ```{r}
 ggplot(aes(x = CDD65, y = KWH^(1/4)), data = data)+
@@ -180,7 +181,7 @@ qplot(x = data$KWH, geom = "histogram", xlab = "kWh")+
   theme_classic(18)
 ```
 
-That's definitely not a normal distribuiton. Maybe it's an exponential? What happens if we take a log transform?
+That's definitely not a normal distribuiton. Maybe it's exponential? What happens if we take a log transform?
 
 ```{r}
 qplot(x = log(data$KWH), geom = "histogram", xlab = "log(kWh)")+
@@ -223,7 +224,7 @@ ggplot(aes(sample = KWH^(1/4)), data = data)+
   theme_classic(18)
 ```
 
-Scaling the outcome is convenient for mathematical reasons, but it makes interpretation difficult. The gamma distribution is a flexible choice for this type of data, and it seems to describe the distribution of `KWH` well.
+Scaling the outcome is convenient for mathematical reasons, but it makes interpretation difficult. The gamma distribution is a flexible choice for this type of data, and it seems to describe the distribution of `KWH` well. We should check the mean-variance relationship, but we'll assume it's ok for now.
 
 ```{r}
 # estimate parameters of gamma with method of moments
@@ -241,6 +242,7 @@ ggplot(aes(x = KWH), data = data)+
 ```
 
 Then we can repeat make the same plots as above, but on the original scale, and ask the `gam` function to use the Gamma distribution to fit the smooth.
+
 ```{r, warning=TRUE, message=TRUE}
 ggplot(aes(x = CDD65, y = KWH, color = REGIONC), data = data)+
   geom_point(alpha = 0.075)+
@@ -257,7 +259,7 @@ For more than 1,000 observations, `geom_smooth` calls the `gam` function from SI
 
 # Common mistakes
 
-* putting `color = "red"` inside the `aes`
+* putting `color = "green"` inside `aes()`. This does not make your points green.
 
 # Exercises
 
@@ -274,9 +276,9 @@ For more than 1,000 observations, `geom_smooth` calls the `gam` function from SI
 **ggplot2**
 
 5. Make the plots that compare `KWH` across `DIVISION` instead of `REGIONC`.
-6. Facet the plots from exercise 1 by `REGIONC`.
-
-
+6. Facet the plots from exercise 1 by `REGIONC` and add titles.
+7. Smooth on the original scale but assuming that `KWH` is normally distributed.
+8. Make a few other plots, e.g. bloxplots faceted by `REGIONC`. See the [`ggplot2` website](http://docs.ggplot2.org/current/) for different choices.
 
 # Final note
 Note: More recently, Hadley Wickham came out with the `tidyr` package. In [introducing `tidyr`](http://blog.rstudio.org/2014/07/22/introducing-tidyr) Wickham says:

@@ -10,14 +10,172 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 ```
 # Introduction
 
-`ggvis`, also by Hadley Wickham, is more recent package. It uses the same piping operators `%>%` as `dplyr`, and tends to render plots more quickly than `ggplot2`. This makes it a good complement to `Shiny`, which Mathieu will cover in a future workshop. You can also make interactive plots in `ggvis` without Shiny.
+Hadley Wickham's `ggvis` package is intended for making interactive plots. It renders plots more quickly than `ggplot2`, which makes it a good choice for using in `Shiny` apps, which Mathieu will cover in a future workshop. It also uses the same piping operators `%>%` as `dplyr`, so you can chain `dplyr` and `ggvis` commands together.
 
-Let's remake some of the above plots from [the last tutorial] with `ggvis`, and add interactive components.
+All `ggvis` graphics are rendered in a web browser, and interactive plots only work if they are connected to an active R session. `ggivs` is newer than `ggplot2`, and while it is great at making web-ready interactive plots, it doesn't yet support a few features, such as side-by-side bar plots and faceting.
 
-```{r, warning = TRUE, message = FALSE}
+Instead of the aesthetics `aes`, `ggvis` has properties, `props`. In most `ggvis` plots, you do not need to explicitly call `prop`. This is similar to using `qplot` from `ggplot2`.
+
+The syntax is also slightly different than `ggplot2`. Instead of just using the `=` operator, `ggvis uses the following:
+
+* Map (`=`): maps graphic parameters to variables in the data
+* Set (`:=`): set a graphic paramter, e.g. `fill := "red"`
+* Evaluate in data (`~`): , e.g. `x = ~variable`
+
+If you don't use `~` in front of `variable`, `ggvis` won't know to look in your dataset for `variable`.
+
+There are other differences, too. For more information, please see the [`ggvis` homepage](http://ggvis.rstudio.com/) and the pages to which it links.
+
+# Examples
+
+We'll use the residential energy consumption survey data. As before, we'll ignore the parsing warnings for now (we take a closer look at them in another tutorial).
+
+```{r, warning = TRUE, message = TRUE}
 library(readr)
 data <- read_csv("http://www.eia.gov/consumption/residential/data/2009/csv/recs2009_public.csv",
   progress=FALSE)
+data$REGIONC <- factor(data$REGIONC, labels=c("Northeast","Midwest","South","West"))
 ```
 
-As before, we'll ignore the parsing warnings for now (we take a closer look at them in [link to tutorial]).
+Let's remake some of the plots from the `ggplot2` tutorial with `ggvis`. As in the `ggplot2` tutorial, I'll explain the new parts of each plot as we go.
+
+```{r}
+library(ggvis)
+library(dplyr)
+
+vis <- data %>%
+  group_by(REGIONC) %>%
+  summarize(unweighted = mean(KWH)) %>%
+  ggvis(~REGIONC, ~unweighted) %>%
+  layer_bars()
+
+vis
+```
+
+Notice that you can resize the plot by dragging the bottom right corner. You can also change the rendering format and download the plot by clicking on the settings button in the top right corner.
+
+Now let's adjust the axis labels. As far as I know, there is not a way to set the font size globally, as in `ggplot2` (e.g. `theme_bw(18)`). The `ggvis` syntax is flexible, but verbose. To keep the code manageable and readable, you can first assign all the non-formatting aspects to a variable, e.g. `vis`, and then pipe that variable to the formatting commands. We already created `vis`, so now we can add the formatting commands.
+
+```{r}
+vis %>%
+  add_axis("x", title = "Region", title_offset = 40,
+    properties = axis_props(
+      title = list(fontSize = 18),
+      labels = list(fontSize = 16)
+    )
+  ) %>%
+  add_axis("y", title = "unweighted mean kWh", title_offset = 70,
+    properties = axis_props(
+      title = list(fontSize = 18),
+      labels = list(fontSize = 16)
+    )
+  )
+```
+
+We can even chain in the `melt` function from `reshape2`. This code is getting a little unruly, but it works.
+
+```{r}
+library(reshape2)
+
+vis <- data %>%
+  group_by(REGIONC) %>%
+  summarize(
+    weighted = weighted.mean(x = KWH, w = NWEIGHT),
+    unweighted = mean(KWH)
+  ) %>%
+  melt(id.vars = "REGIONC") %>% 
+  ggvis(~REGIONC, ~value, fill=~variable) %>%
+  layer_bars()
+  
+vis %>%
+  add_legend("fill", title = "",
+    properties = legend_props(
+      labels = list(fontSize = 16)
+    )
+  ) %>%
+  add_axis("x", title = "Region", title_offset = 40,
+    properties = axis_props(
+      title = list(fontSize = 18),
+      labels = list(fontSize = 16)
+    )
+  ) %>%
+  add_axis("y", title = "unweighted mean kWh", title_offset = 70,
+    properties = axis_props(
+      title = list(fontSize = 18),
+      labels = list(fontSize = 16)
+    )
+  )
+```
+
+It looks like [`ggivs` does not yet support grouped (side-by-side) bar plots](https://github.com/rstudio/ggvis/issues/164), so for now we'll have to stick with two bar plots, one for the weighted and one for the unweighted means.
+
+Now let's remake the smoothed scatter plots. [`ggvis` does not currently support faceting](http://ggvis.rstudio.com/ggplot2.html), but we can still make a plot that groups by region. We'll call `gam` from the `mgcv` package. Note that we don't need to load the `mgcv` package first if we use `mgcv::gam`, which tells R where to find the `gam` function. This is a general property of the R language, and not specific to any package.
+
+```{r}
+vis <- data %>% ggvis(~CDD65, ~KWH, fill=~REGIONC) %>%
+  mutate(KWH = KWH^(1/4)) %>%
+  layer_points(opacity := 0.075) %>%
+  group_by(REGIONC) %>%
+  layer_model_predictions(stroke = ~REGIONC, model="mgcv::gam")
+  
+vis %>%
+  add_legend(c("fill", "stroke"), title = "Region",
+    properties = legend_props(
+      title = list(fontSize = 18),
+      labels = list(fontSize = 16)
+    )
+  ) %>%
+  add_axis("x", title = "Cooling days", title_offset = 40,
+    values = rep(0:5)*1000,
+    properties = axis_props(
+      title = list(fontSize = 18),
+      labels = list(fontSize = 16)
+    )
+  ) %>%
+  add_axis("y", title = "kWh^(1/4)", title_offset = 40,
+    properties = axis_props(
+      title = list(fontSize = 18),
+      labels = list(fontSize = 16)
+    )
+  )
+```
+
+We can also use loess smoothing by calling `layer_smooths`. We'll make the bandwith (span) interactive. To use the interactive component, you'll need to run this in your own R session.
+
+```{r}
+vis <- data %>% ggvis(~CDD65, ~KWH, fill=~REGIONC) %>%
+  mutate(KWH = KWH^(1/4)) %>%
+  layer_points(opacity := 0.075) %>%
+  group_by(REGIONC) %>%
+  layer_smooths(span = input_slider(0.1, 5, 1, label = "Span"),
+    stroke = ~REGIONC,
+    se = TRUE)
+  
+vis %>%
+  add_legend(c("fill", "stroke"), title = "Region",
+    properties = legend_props(
+      title = list(fontSize = 18),
+      labels = list(fontSize = 16)
+    )
+  ) %>%
+  add_axis("x", title = "Cooling days", title_offset = 40,
+    values = rep(0:5)*1000,
+    properties = axis_props(
+      title = list(fontSize = 18),
+      labels = list(fontSize = 16)
+    )
+  ) %>%
+  add_axis("y", title = "kWh^(1/4)", title_offset = 40,
+    properties = axis_props(
+      title = list(fontSize = 18),
+      labels = list(fontSize = 16)
+    )
+  )
+```
+
+# Exercises
+
+1. Make a histogram of `KWH` with interactive bin width. You can consult the [`ggvis` cookbook](http://ggvis.rstudio.com/cookbook.html) to find a histogram example, and the [interactivity](http://ggvis.rstudio.com/interactivity.html) page to find interactive controls.
+2. Re-write the code for the bar plots above, splitting the code for `vis` into two steps: 1) creating a dataset, and 2) giving the dataset to `ggvis`. This is similar to the steps we took in the previous tutorial.
+3. Add interactive controls to the smoothing plots to control the size of the dots.
+4. Add any other interactive components you want, and experiment with other types of plots.

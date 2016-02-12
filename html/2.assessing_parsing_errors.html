@@ -136,16 +136,6 @@ data &lt;- read_csv(file.path(parent, 'data', 'recs2009.csv'),
   col_types = colTypes,
   progress = FALSE)</code></pre>
 <p>This is one way to solve the problem, though now every column is a <code>double</code>, so the data take up more space. This isn’t a big dataset, so it’s not a problem, but in other cases you might want to specify all the numeric columns as <code>int</code>, accept for the eight problematic columns.</p>
-<p>We should also take a look at the missing data patterns before moving on. We’ll use the <a href="https://cran.r-project.org/web/packages/pheatmap/index.html"><code>pheatmap</code></a> package to visualize the first few rows of missing data. The <a href="https://cran.r-project.org/web/packages/mi/index.html"><code>mi</code></a> package is also useful for inspecting missing data patterns, though it seems to work best for smaller datasets.</p>
-<pre class="r"><code>library(pheatmap)
-
-dataNA &lt;- is.na(data)
-mode(dataNA) &lt;- &quot;integer&quot;
-pheatmap(dataNA[1:500,], cluster_rows = FALSE, cluster_cols = FALSE)</code></pre>
-<pre class="r"><code>colsWithNA &lt;- which(apply(is.na(data), 2, sum) &gt; 0)
-colsWithNA
-barplot(colsWithNA)</code></pre>
-<p>We should keep these variables in mind when we analyze the data, because the missingess might introduce bias.</p>
 
 
 </div>

@@ -6,7 +6,7 @@ description: Statistical programming with R
 
 ## Statistical programming in R
 
-These notes go over some aspects of:
+These notes cover some aspects of:
 
 0. [Downloading data in R](0.downloading_data.html)
 1. [Managing large desktop-sized files (a few GB in size)](1.managing_large_files.html)

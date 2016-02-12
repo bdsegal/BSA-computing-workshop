@@ -1,6 +1,5 @@
 ---
 title: "Assessing parsing errors from `readr`"
-author: "Brian Segal"
 date: "Feb 12, 2016"
 number_sections: yes
 ---
@@ -29,7 +28,7 @@ badCol <- unique(prob$col)
 badCol
 ```
 
-There were problems reading in eight columns. There were only `r nrow(prob)` observations with problems, but before proceeding, we should figure out if these problems indicate larger data quality issues, especially if we are interested in the problematic columns. To start, we can consult the documentation, and if we deem it sufficiently important, we could get in touch with the staff at EIA.
+There were problems reading in eight columns. There were only `r nrow(prob)` observations with problems, but before proceeding, we should figure out if these problems indicate larger data quality issues, especially if we are interested in the problematic columns. To start, we can consult the RECS documentation, and if necessary, we could get in touch with the EIA staff.
 
 In this case, the Energy Information Administration (EIA) provides a layout file. We can use it to get more information about the problematic columns.
 
@@ -58,3 +57,7 @@ data <- read_csv(file.path(parent, 'data', 'recs2009.csv'),
 ```
 
 This is one way to solve the problem, though now every column is a `double`, so the data take up more space. This isn't a big dataset, so it's not a problem, but in other cases you might want to specify all the numeric columns as `int`, accept for the eight problematic columns.
+
+---
+
+[Brian Segal](https://github.com/bdsegal)

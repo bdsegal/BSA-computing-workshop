@@ -1,6 +1,5 @@
 ---
 title: "Managing large desktop-sized files"
-author: "Brian Segal"
 date: "Feb 12, 2016"
 number_sections: yes
 ---
@@ -11,14 +10,13 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 # Getting started
 
-Please run the `download_files.R` script in the main folder. This will download datasets, described below, and place them in the `data` folder.
+To follow along, please download the datasets in the previous tutorial, and place all downloaded files in a folder called `data` at the same level as the working directory. Alternatively, you could change `dataPath` in the first code block to point to the location of the data. You could also clone the [repository](https://github.com/bdsegal/BSA-computing-workshop) and run the 'download_files.R' script in the `data` folder.
 
 # Managing files
 
 Managing files from within R can be useful in some situations, like making reproducible reports.
 
 ```{r}
-# This assumes you haven't changed the folder structure
 parent <- dirname(getwd())
 dataPath <- file.path(parent, 'data')
 
@@ -43,6 +41,8 @@ size <- info["recs2009.csv", "size"]
 size/1e6
 ```
 
+So the `recs2009.csv` file is `r round(size/1e6)` MB -- a very manageable size.
+
 # Reading in data
 
 Base R functions and data structures, such as `read.csv` and data frames, are fine for most datasets. However, for larger datasets, the `readr` and `data.table` packages are noticeably faster.
@@ -59,9 +59,9 @@ At `r round(size/1e6)` MB, the `recs2009.csv` file isn't large. However, if we w
 # Compare read-in times
 t_base <- system.time(data <- read.csv(file.path(dataPath, 'recs2009.csv')))[3] # base R
 
-t_fread <- system.time(data <- fread(file.path(dataPath, 'recs2009.csv'), showProgress = FALSE))[3] # data.table package
+t_fread <- system.time(data <- fread(file.path(dataPath, 'recs2009.csv'), showProgress = FALSE))[3] # data.table
 
-t_readr <- system.time(data <- read_csv(file.path(dataPath, 'recs2009.csv'), progress = FALSE))[3] # readr package
+t_readr <- system.time(data <- read_csv(file.path(dataPath, 'recs2009.csv'), progress = FALSE))[3] # readr
 
 compare <- c(t_base, t_readr, t_fread)
 names(compare) <- c("read.csv", "read_csv", "fread")
@@ -74,7 +74,7 @@ barplot(compare, ylab = "time (sec)",
   " MB csv file", sep = ""))
 ```
 
-We downloaded the `recs2009.csv` file earlier to save time, but you can also pass the url directly to read.csv, read_csv, and fread.
+We downloaded the `recs2009.csv` file earlier to save time, but you can also pass the url directly to `read.csv`, `read_csv`, and `fread`.
 
 `read_csv` had trouble parsing some records. The `tbl_df` object records these problems as an attribute.
 
@@ -93,7 +93,7 @@ size <- info["train.csv", "size"]
 size/1e6
 ```
 
-The `train.csv` file contains the trajectories of 442 taxis in the city of Porto, Portugal for one complete year (from 01/07/2013 to 30/06/2014). The European Conference on Machine Learning and Principles and Practice of Knowledge Discovery in Databases (ECML PKDD) hosted a competition through Kaggle with this dataset last summer. The data are publicly available on the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Taxi+Service+Trajectory+-+Prediction+Challenge,+ECML+PKDD+2015).
+The `train.csv` file contains the trajectories of 442 taxis in the city of Porto, Portugal for one complete year (from 7/1/2013 to 6/30/2014). The European Conference on Machine Learning and Principles and Practice of Knowledge Discovery in Databases (ECML PKDD) hosted a competition through Kaggle with this dataset last summer. The data are publicly available on the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Taxi+Service+Trajectory+-+Prediction+Challenge,+ECML+PKDD+2015).
 
 At `r prettyNum(round(size/1e6), big.mark=",")` MB, the `train.csv` file is too large for `read.csv`. The following code crashed my computer, which has 8 GB of memory:
 ```{r}
@@ -101,13 +101,15 @@ At `r prettyNum(round(size/1e6), big.mark=",")` MB, the `train.csv` file is too 
 # read.csv(file.path(dataPath, 'train.csv'))
 ```
 
-However, we can still read in the file with `readr` and `data.table`. We can use the `rm` and `gc` functions to remove large files and return the memory to the operating system (gc for garbage collection). Typically we only need to call `rm` (see Hadley Wikham's [Advanced R](http://adv-r.had.co.nz/memory.html) , but when I monitor memory usage with the Windows Task Manager, I don't see a decrease in memory use until after I call `gc`. I don't know if it helps, but it doesn't hurt, so I sometimes call `gc` to be safe.
+However, we can still read in the file with `readr` and `data.table`. We can use the `rm` and `gc` functions to remove large files and return the memory to the operating system (gc for garbage collection). Typically, we only need to call `rm` (see Hadley Wikham's [Advanced R](http://adv-r.had.co.nz/memory.html)). However, when I monitor memory use with the windows task manager, I don't see a decrease until after I call `gc`. I don't know if it helps, but it doesn't hurt, so sometimes I call `gc` to be safe.
+
+`system.time` calls `gc` by default, so we don't need `gc` after the first `rm`.
 
 To keep the comparison below fair, I specified the column types. If you don't specify column types with this example, `read_csv` does a better job at guessing which columns are integers. `fread` guessed that everything was a character string, and actually took longer to read in the data.
 
 ```{r, cache=TRUE, warning=TRUE, message=FALSE}
 
-tReadr <- system.time(data <- read_csv(file.path(dataPath, 'train.csv'),
+t_readr <- system.time(data <- read_csv(file.path(dataPath, 'train.csv'),
   col_types=cols(
     TRIP_ID = col_character(),
     CALL_TYPE = col_character(),
@@ -121,27 +123,26 @@ tReadr <- system.time(data <- read_csv(file.path(dataPath, 'train.csv'),
     progress=FALSE)
     )[3]
 rm(data)
-gc()
 
-tData.table <- system.time(data <- fread(file.path(dataPath, 'train.csv'), 
+t_fread <- system.time(data <- fread(file.path(dataPath, 'train.csv'), 
   colClasses = c("character","character", rep("integer",4), rep("character",3)),
   showProgress = FALSE)
   )[3]
 rm(data)
 gc()
 
-compare <- c(tReadr, tData.table)
+compare <- c(t_readr, t_fread)
 names(compare) <- c("read_csv", "fread")
 
 barplot(compare, ylab = "time (sec)", 
   main = paste("Time to read in ", prettyNum(round(size / 1e6), big.mark = ","), " MB csv file", sep = ""))
 ```
 
-`fread` from `data.table` is typically faster than `read_csv` from `readr`, though `fread` creates a `data.table` instead of a `data.frame`, which uses different syntax. However, I haven't run into any problems converting `data.tables` to `data.frames` with the `as.data.frame` function. `read_csv` creates a `tbl_df` object, which is a wrapper for `data.frame`. See Hadley Wickham's [github page on `readr`](https://github.com/hadley/readr) for more information.
+`fread` from `data.table` is typically faster than `read_csv` from `readr`. `fread` creates a `data.table` instead of a `data.frame`, which uses different syntax and doesn't work as well with `dplyr`. I think the syntax is fine, though, and operations with `data.table` are [fast](https://github.com/Rdatatable/data.table/wiki/Benchmarks-%3A-Grouping). If you need to convert a `data.table` to a `data.frame`, you can use the `as.data.frame` function. See Hadley Wickham's [github page on `readr`](https://github.com/hadley/readr) for more information on `readr`.
 
 # Working with data too large for memory
 
-For datasets too large to fit into memory, you can use gawk command line tools from within R to read in a subset of the data. This can help you to get a sense for the data before implementing another computing solution, some of which I mention below. We'll use the `train.csv` dataset, and treat it as if it were too big for memory. 
+There are several options for working with datasets too large to fit into memory. As one quick approach, you can use gawk command line tools from within R to read in a subset of the data. This can help you to get a sense for the data before implementing another computing solution, some of which I mention below. We'll use the `train.csv` dataset, and treat it as if it were too big for memory. 
 
 ```{r, cache=TRUE}
 setwd(dataPath)
@@ -155,7 +156,7 @@ colnames(train) <- colnames(header)
 str(train)
 ```
 
-Gawk is a GNU implementation of awk, a command line file processing tool for Unix. For more information, see [http://www.gnu.org/software/gawk](http://www.gnu.org/software/gawk). To install gawk on Windows OS, see [http://gnuwin32.sourceforge.net/packages/gawk.htm](http://gnuwin32.sourceforge.net/packages/gawk.htm).
+Gawk is a GNU implementation of awk, a command line file processing tool for Unix. For more information, see the [gawk home page](http://www.gnu.org/software/gawk). Kerby Shedden's [STAT 506 class notes](http://dept.stat.lsa.umich.edu/~kshedden/Courses/Stat506/large_files/) also have some pointers for using awk.
 
 This is a quick way to peak at large datasets with R. However, the subset might be a biased sample from the full dataset, especially if the variables (columns) have non-random trends across the observations (rows). In some cases, you might be able to repeat the same analysis with multiple samples, and then aggregate the results. Ariel Kleiner, et al.'s [Bag of Little Bootstraps](http://arxiv.org/abs/1112.5016) is an example of this approach. I think it was developed with a distributed computing system in mind, but you could also implement it on desktop.
 
@@ -163,9 +164,9 @@ Depending on your situation, you might also consider:
 
 * Calculating sufficient statistics on a data stream (e.g. by writing a function in C, see Hyun Kang's [BIOSAT 615 class notes](http://genome.sph.umich.edu/wiki/Biostatistics_615/815:_Main_Page), lecture 14, slides 9-13)
 * Converting the data into a Hierarchical Data Format version 5 (HDF5) file and using the `rhdf5` package (see Kerby Shedden's [STAT 506 class notes](http://dept.stat.lsa.umich.edu/~kshedden/Courses/Stat506/large_files/))
-* Storing the dataset in a SQL database, and connecting via `dplyr` or another package (see Hadley Wickham's [vignette for connecting dplyr to remote databases](https://cran.r-project.org/web/packages/dplyr/vignettes/databases.html)). The `ff` package, for 'flat file', is another package that works with data stored on disk. These options are probably best if you have a solid state drive (SSDs).
+* Storing the dataset in a SQL database, and connecting via `dplyr` or another package (see Hadley Wickham's [vignette for connecting dplyr to remote databases](https://cran.r-project.org/web/packages/dplyr/vignettes/databases.html)). The [`ff`](https://cran.r-project.org/web/packages/ff/index.html) package ('flat file') is another package that works with data stored on disk. These options are probably best if you have a solid state drive (SSD).
 * Using a distributed computing system, like Spark or Hadoop (see the schedule of [Advanced Research Computing workshops](http://arc-ts.umich.edu/training-workshops/))
-* Using the `bigmemory` package to more efficiently store matrices in memory.
+* Using the [`bigmemory`](https://cran.r-project.org/web/packages/bigmemory/index.html) package to more efficiently store matrices in memory.
 
 # Other notes/tips
 
@@ -176,5 +177,9 @@ Depending on your situation, you might also consider:
 # Exercises
 
 1. Read in the `train.zip` file directly without unzipping first using `read_csv`. Try to do the same with `fread`. I think you'll need to insert a command line option into the call, e.g. `'zcat train.zip'` on linux. I'm not sure how to do this on Windows, but let me know if you find a way.
-2. Download a gz file (e.g., see `download_data.html`) and read the gz file directly into R without decompressing first. For this, you will need to wrap the file name in `gzfile`, e.g. `read_csv(gzfile(1887.csv.gz))`.
+2. Download a gz file (e.g., see the 'downloading data in R' tutorial) and read the gz file directly into R without decompressing first. For this, you will need to wrap the file name in `gzfile`, e.g. `read_csv(gzfile(2010.csv.gz))`.
 3. Read the `recs2009.csv` file directly from the web by passing the url to `read.csv`, `read_csv`, and `fread`.
+
+---
+
+[Brian Segal](https://github.com/bdsegal)

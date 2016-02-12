@@ -1,6 +1,5 @@
 ---
 title: "Tips for downloading data in R"
-author: "Brian Segal"
 date: "Feb 12, 2016"
 number_sections: yes
 ---
@@ -11,13 +10,13 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, eval=FALSE)
 
 # Avoid hard-coding directory paths
 
-This is more of a general tip for reproducibility. If the user doesn't change the folder structure, then we can do this by getting the parent directory,
+This is more of a general tip for reproducibility. For example, we can reference directories at the same level as the working directory by getting the parent directory
 
 ```{r}
 parent <- dirname(getwd())
 ```
 
-and then using `file.path` to create the file path. Use `file.path` instead of `paste` to write platform indepedent code. 
+and then using `file.path` to create the file path. Use `file.path` instead of `paste` to write platform indepedent code. Please see the examples below.
 
 # csv files
 
@@ -32,7 +31,7 @@ download.file(url="http://www.eia.gov/consumption/residential/data/2009/csv/recs
 
 # zip files
 
-To download zip files, we don't need any additional arguments to `download.file
+To download zip files, we don't need any additional arguments to `download.file`
 
 ```{r}
 # Porto taxi cab data, 520 MB zip file
@@ -40,7 +39,7 @@ download.file(url="https://archive.ics.uci.edu/ml/machine-learning-databases/003
   destfile=file.path(parent,'data','train.zip', sep=""))
 ```
 
-We'll unzip the file for demonstration, but this isn't necessary, because R's read functions accept zipped files. By default, `unzip` does not remove the original zip file.
+We'll unzip the file for demonstration, but this isn't necessary, because R's read functions accept zipped files. By default, `unzip` does not remove the original zip file. 
 
 ```{r}
 unzip("train.zip")
@@ -51,9 +50,10 @@ unzip("train.zip")
 Downloading gz files is the same as zip files.
 
 ```{r}
-# weather data 14 MB gz file
-download.file(url="http://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_year/1887.csv.gz",
-  destfile=paste(getwd(),"/1887.csv.gz", sep=""))
+# weather data, 206 MB gz file
+download.file(url="http://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_year/2010.csv.gz",
+  mode="wb",
+  destfile=file.path(parent, 'data', '2010.csv.gz'))
 ```
 
 To unzip gz files, you need the `R.utils` package, though as for zip files, this usually isn't necessary. `unzip` removes the original gz file by default, but you can set `remove=FALSE` to keep the gz file.
@@ -61,5 +61,9 @@ To unzip gz files, you need the `R.utils` package, though as for zip files, this
 ```{r}
 ifelse(!require(R.utils), install.packages("R.utils"), "already installed")
 library(R.utils)
-gunzip("1887.csv.gz", remove=FALSE)
+gunzip("2010.csv.gz", remove=FALSE)
 ```
+
+---
+
+[Brian Segal](https://github.com/bdsegal)

@@ -2,3 +2,7 @@ base
 rmarkdown
 readr
 data.table
+reshape2
+dplyr
+ggplot2
+ggvis

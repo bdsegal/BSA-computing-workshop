@@ -1,6 +1,5 @@
 ---
-title: "Faster operations with `readr`, `dplyr` and `data.table`"
-author: "Brian Segal"
+title: "Faster operations with `readr`, `dplyr` and `data.table` (draft)"
 date: "Feb 12, 2016"
 number_sections: yes
 ---
@@ -52,7 +51,7 @@ Note: I don't think this is the best way to bootstrap with `dplyr`. See the [`br
 library(readr)
 library(dplyr)
 
-data <- read_csv(file.path(parent, 'data', 'recs2009.csv'))
+data <- read_csv(file.path(parent, 'data', 'recs2009.csv'), progress=FALSE)
 
 bootDplyr <- array(NA, dim=c(B,4))
 
@@ -117,6 +116,10 @@ Note: For a more comprehensive comparison, you could repeat the above many times
 
 1. With `dplyr` and `data.table`, bootstrap both the mean and the median, grouped by region. Calculate both quantities with a single call to `summary` and `data.table[]`, respectively. Use `B=100` iterations while you are testing your code.
 
-2. With `dplyr` and `data.table` bootstrap the mean for all numeric variables, grouped by region. Do this with a single call to `dplyr` and `data.table`. The examples in this [stack overflow discussion](http://stackoverflow.com/questions/21435339/data-table-vs-dplyr-can-one-do-something-well-the-other-cant-or-does-poorly) have some useful tips, as well as commentary about `dplyr` vs `data.table`.
+2. With `dplyr` and `data.table` bootstrap the mean for all numeric variables, grouped by region. Do this with a single call to `dplyr` and `data.table`. The examples in this [stack overflow discussion](http://stackoverflow.com/questions/21435339/data-table-vs-dplyr-can-one-do-something-well-the-other-cant-or-does-poorly) have useful tips, as well as commentary about `dplyr` vs `data.table`.
 
 3. Watch [Grace Hopper explain nanoseconds](https://www.youtube.com/watch?v=JEpsKnWZrJ8)
+
+---
+
+[Brian Segal](https://github.com/bdsegal)

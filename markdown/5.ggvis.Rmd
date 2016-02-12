@@ -1,6 +1,5 @@
 ---
 title: "Plotting with `ggvis`"
-author: "Brian Segal"
 date: "Feb 12, 2016"
 number_sections: yes
 ---
@@ -14,21 +13,21 @@ Hadley Wickham's `ggvis` package is intended for making interactive plots. It re
 
 All `ggvis` graphics are rendered in a web browser, and interactive plots only work if they are connected to an active R session. `ggivs` is newer than `ggplot2`, and while it is great at making web-ready interactive plots, it doesn't yet support a few features, such as side-by-side bar plots and faceting.
 
-Instead of the aesthetics `aes`, `ggvis` has properties, `props`. In most `ggvis` plots, you do not need to explicitly call `prop`. This is similar to using `qplot` from `ggplot2`.
+Instead of the aesthetics (`aes`), `ggvis` has properties (`props`). In most `ggvis` plots, you do not need to explicitly call `prop`. This is similar to using `qplot` from `ggplot2`.
 
-The syntax is also slightly different than `ggplot2`. Instead of just using the `=` operator, `ggvis uses the following:
+The syntax is also slightly different than `ggplot2`. Instead of just using the `=` operator, `ggvis` uses the following:
 
 * Map (`=`): maps graphic parameters to variables in the data
 * Set (`:=`): set a graphic paramter, e.g. `fill := "red"`
 * Evaluate in data (`~`): , e.g. `x = ~variable`
 
-If you don't use `~` in front of `variable`, `ggvis` won't know to look in your dataset for `variable`.
+If you don't use `~` in front of `variable`, `ggvis` won't know where to look for `variable`.
 
 There are other differences, too. For more information, please see the [`ggvis` homepage](http://ggvis.rstudio.com/) and the pages to which it links.
 
 # Examples
 
-We'll use the residential energy consumption survey data. As before, we'll ignore the parsing warnings for now (we take a closer look at them in another tutorial).
+We'll use the [residential energy consumption survey[(http://www.eia.gov/consumption/residential/data/2009/) data again. As before, we'll ignore the parsing warnings for now.
 
 ```{r, warning = TRUE, message = TRUE}
 library(readr)
@@ -64,7 +63,7 @@ vis %>%
       labels = list(fontSize = 16)
     )
   ) %>%
-  add_axis("y", title = "unweighted mean kWh", title_offset = 70,
+  add_axis("y", title = "Unweighted mean kWh", title_offset = 70,
     properties = axis_props(
       title = list(fontSize = 18),
       labels = list(fontSize = 16)
@@ -179,3 +178,7 @@ vis %>%
 2. Re-write the code for the bar plots above, splitting the code for `vis` into two steps: 1) creating a dataset, and 2) giving the dataset to `ggvis`. This is similar to the steps we took in the previous tutorial.
 3. Add interactive controls to the smoothing plots to control the size of the dots.
 4. Add any other interactive components you want, and experiment with other types of plots.
+
+---
+
+[Brian Segal](https://github.com/bdsegal)

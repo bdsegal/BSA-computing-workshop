@@ -8,7 +8,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
-<meta name="author" content="Brian Segal" />
 
 
 <title>Tips for downloading data in R</title>
@@ -62,7 +61,6 @@ img {
 
 <div id="header">
 <h1 class="title">Tips for downloading data in R</h1>
-<h4 class="author"><em>Brian Segal</em></h4>
 <h4 class="date"><em>Feb 12, 2016</em></h4>
 </div>
 
@@ -77,9 +75,9 @@ img {
 
 <div id="avoid-hard-coding-directory-paths" class="section level1">
 <h1><span class="header-section-number">1</span> Avoid hard-coding directory paths</h1>
-<p>This is more of a general tip for reproducibility. If the user doesn’t change the folder structure, then we can do this by getting the parent directory,</p>
+<p>This is more of a general tip for reproducibility. For example, we can reference directories at the same level as the working directory by getting the parent directory</p>
 <pre class="r"><code>parent &lt;- dirname(getwd())</code></pre>
-<p>and then using <code>file.path</code> to create the file path. Use <code>file.path</code> instead of <code>paste</code> to write platform indepedent code.</p>
+<p>and then using <code>file.path</code> to create the file path. Use <code>file.path</code> instead of <code>paste</code> to write platform indepedent code. Please see the examples below.</p>
 </div>
 <div id="csv-files" class="section level1">
 <h1><span class="header-section-number">2</span> csv files</h1>
@@ -91,7 +89,7 @@ download.file(url=&quot;http://www.eia.gov/consumption/residential/data/2009/csv
 </div>
 <div id="zip-files" class="section level1">
 <h1><span class="header-section-number">3</span> zip files</h1>
-<p>To download zip files, we don’t need any additional arguments to `download.file</p>
+<p>To download zip files, we don’t need any additional arguments to <code>download.file</code></p>
 <pre class="r"><code># Porto taxi cab data, 520 MB zip file
 download.file(url=&quot;https://archive.ics.uci.edu/ml/machine-learning-databases/00339/train.csv.zip&quot;,
   destfile=file.path(parent,'data','train.zip', sep=&quot;&quot;))</code></pre>
@@ -101,13 +99,16 @@ download.file(url=&quot;https://archive.ics.uci.edu/ml/machine-learning-database
 <div id="gz-files" class="section level1">
 <h1><span class="header-section-number">4</span> gz files</h1>
 <p>Downloading gz files is the same as zip files.</p>
-<pre class="r"><code># weather data 14 MB gz file
-download.file(url=&quot;http://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_year/1887.csv.gz&quot;,
-  destfile=paste(getwd(),&quot;/1887.csv.gz&quot;, sep=&quot;&quot;))</code></pre>
+<pre class="r"><code># weather data, 206 MB gz file
+download.file(url=&quot;http://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_year/2010.csv.gz&quot;,
+  mode=&quot;wb&quot;,
+  destfile=file.path(parent, 'data', '2010.csv.gz'))</code></pre>
 <p>To unzip gz files, you need the <code>R.utils</code> package, though as for zip files, this usually isn’t necessary. <code>unzip</code> removes the original gz file by default, but you can set <code>remove=FALSE</code> to keep the gz file.</p>
 <pre class="r"><code>ifelse(!require(R.utils), install.packages(&quot;R.utils&quot;), &quot;already installed&quot;)
 library(R.utils)
-gunzip(&quot;1887.csv.gz&quot;, remove=FALSE)</code></pre>
+gunzip(&quot;2010.csv.gz&quot;, remove=FALSE)</code></pre>
+<hr />
+<p><a href="https://github.com/bdsegal">Brian Segal</a></p>
 </div>
 
 

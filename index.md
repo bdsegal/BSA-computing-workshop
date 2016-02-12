@@ -17,8 +17,6 @@ These notes cover some aspects of:
 
 I might also put together notes on visualizing missing data with [`pheatmap`](https://cran.r-project.org/web/packages/pheatmap/index.html) and [`mi`](https://cran.r-project.org/web/packages/mi/index.html).
 
-To run tutorials 1-4, it would be easiest to clone the [repository](https://github.com/bdsegal/BSA-computing-workshop).
-
-Feel free to contact me at bdsegal@umich.edu if you have any questions.
+To run tutorials 1-4, it would be easiest to clone the [repository](https://github.com/bdsegal/BSA-computing-workshop) so you have the same folder structure, but that's not necessary.
 
 Thanks, and happy computing!

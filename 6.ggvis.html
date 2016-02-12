@@ -122,27 +122,27 @@ vis &lt;- data %&gt;%
   layer_bars()
 
 vis</code></pre>
-<p><div id="plot_id454511152-container" class="ggvis-output-container">
-<div id="plot_id454511152" class="ggvis-output"></div>
+<p><div id="plot_id725900094-container" class="ggvis-output-container">
+<div id="plot_id725900094" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id454511152_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id454511152" data-renderer="svg">SVG</a>
+<a id="plot_id725900094_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id725900094" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id454511152_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id454511152" data-renderer="canvas">Canvas</a>
+<a id="plot_id725900094_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id725900094" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id454511152_download" class="ggvis-download" data-plot-id="plot_id454511152">Download</a>
+<a id="plot_id725900094_download" class="ggvis-download" data-plot-id="plot_id725900094">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id454511152_spec = {
+var plot_id725900094_spec = {
   "data": [
     {
       "name": ".0/count1/stack2",
@@ -270,7 +270,7 @@ var plot_id454511152_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id454511152").parseSpec(plot_id454511152_spec);
+ggvis.getPlot("plot_id725900094").parseSpec(plot_id725900094_spec);
 </script></p>
 <p>Notice that you can resize the plot by dragging the bottom right corner. You can also change the rendering format and download the plot by clicking on the settings button in the top right corner.</p>
 <p>Now let’s adjust the axis labels. As far as I know, there is not a way to set the font size globally like in <code>ggplot2</code> (e.g. <code>theme_bw(18)</code>). The <code>ggvis</code> syntax is flexible, but verbose. To keep the code manageable and readable, you can first assign all the non-formatting aspects to a variable, e.g. <code>vis</code> for visual, and then pipe that variable to the formatting commands. We already created <code>vis</code>, so now we can add the formatting commands.</p>
@@ -287,27 +287,27 @@ ggvis.getPlot("plot_id454511152").parseSpec(plot_id454511152_spec);
       labels = list(fontSize = 16)
     )
   )</code></pre>
-<p><div id="plot_id603870225-container" class="ggvis-output-container">
-<div id="plot_id603870225" class="ggvis-output"></div>
+<p><div id="plot_id488592766-container" class="ggvis-output-container">
+<div id="plot_id488592766" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id603870225_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id603870225" data-renderer="svg">SVG</a>
+<a id="plot_id488592766_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id488592766" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id603870225_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id603870225" data-renderer="canvas">Canvas</a>
+<a id="plot_id488592766_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id488592766" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id603870225_download" class="ggvis-download" data-plot-id="plot_id603870225">Download</a>
+<a id="plot_id488592766_download" class="ggvis-download" data-plot-id="plot_id488592766">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id603870225_spec = {
+var plot_id488592766_spec = {
   "data": [
     {
       "name": ".0/count1/stack2",
@@ -461,7 +461,7 @@ var plot_id603870225_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id603870225").parseSpec(plot_id603870225_spec);
+ggvis.getPlot("plot_id488592766").parseSpec(plot_id488592766_spec);
 </script></p>
 <p>We can even chain in the <code>melt</code> function from <code>reshape2</code>. This code is getting a little unruly, but it works.</p>
 <pre class="r"><code>library(reshape2)
@@ -494,27 +494,27 @@ vis %&gt;%
       labels = list(fontSize = 16)
     )
   )</code></pre>
-<p><div id="plot_id262044423-container" class="ggvis-output-container">
-<div id="plot_id262044423" class="ggvis-output"></div>
+<p><div id="plot_id623778638-container" class="ggvis-output-container">
+<div id="plot_id623778638" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id262044423_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id262044423" data-renderer="svg">SVG</a>
+<a id="plot_id623778638_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id623778638" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id262044423_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id262044423" data-renderer="canvas">Canvas</a>
+<a id="plot_id623778638_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id623778638" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id262044423_download" class="ggvis-download" data-plot-id="plot_id262044423">Download</a>
+<a id="plot_id623778638_download" class="ggvis-download" data-plot-id="plot_id623778638">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id262044423_spec = {
+var plot_id623778638_spec = {
   "data": [
     {
       "name": ".0/group_by1/count2/stack3_flat",
@@ -718,7 +718,7 @@ var plot_id262044423_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id262044423").parseSpec(plot_id262044423_spec);
+ggvis.getPlot("plot_id623778638").parseSpec(plot_id623778638_spec);
 </script></p>
 <p>It looks like <a href="https://github.com/rstudio/ggvis/issues/164"><code>ggivs</code> does not yet support grouped (side-by-side) bar plots</a>, so for now we’ll have to stick with two bar plots, one for the weighted and one for the unweighted means.</p>
 <p>Now let’s remake the smoothed scatter plots. <a href="http://ggvis.rstudio.com/ggplot2.html"><code>ggvis</code> does not currently support faceting</a>, but we can still make a plot that uses color to group by region. In this case, instead of calling <code>color</code>, we’ll use both <code>fill</code> and <code>stroke</code>. We’ll also call <code>gam</code> from the <code>mgcv</code> package. Note that we don’t need to load the <code>mgcv</code> package first if we use <code>mgcv::gam</code>. This is R’s scope resolution operator. It is part of the R language, and not specific to any package.</p>
@@ -748,27 +748,27 @@ vis %&gt;%
       labels = list(fontSize = 16)
     )
   )</code></pre>
-<p><div id="plot_id187681914-container" class="ggvis-output-container">
-<div id="plot_id187681914" class="ggvis-output"></div>
+<p><div id="plot_id324965370-container" class="ggvis-output-container">
+<div id="plot_id324965370" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id187681914_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id187681914" data-renderer="svg">SVG</a>
+<a id="plot_id324965370_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id324965370" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id187681914_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id187681914" data-renderer="canvas">Canvas</a>
+<a id="plot_id324965370_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id324965370" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id187681914_download" class="ggvis-download" data-plot-id="plot_id187681914">Download</a>
+<a id="plot_id324965370_download" class="ggvis-download" data-plot-id="plot_id324965370">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id187681914_spec = {
+var plot_id324965370_spec = {
   "data": [
     {
       "name": ".0/mutate1",
@@ -1038,7 +1038,7 @@ var plot_id187681914_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id187681914").parseSpec(plot_id187681914_spec);
+ggvis.getPlot("plot_id324965370").parseSpec(plot_id324965370_spec);
 </script></p>
 <p>We can also use loess smoothing by calling <code>layer_smooths</code>. We’ll make the bandwith (span) interactive. To use the interactive component, you’ll need to run this in your own R session.</p>
 <pre class="r"><code>vis &lt;- data %&gt;% ggvis(~CDD65, ~KWH, fill=~REGIONC) %&gt;%
@@ -1069,27 +1069,27 @@ vis %&gt;%
       labels = list(fontSize = 16)
     )
   )</code></pre>
-<p><div id="plot_id247175612-container" class="ggvis-output-container">
-<div id="plot_id247175612" class="ggvis-output"></div>
+<p><div id="plot_id378360605-container" class="ggvis-output-container">
+<div id="plot_id378360605" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id247175612_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id247175612" data-renderer="svg">SVG</a>
+<a id="plot_id378360605_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id378360605" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id247175612_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id247175612" data-renderer="canvas">Canvas</a>
+<a id="plot_id378360605_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id378360605" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id247175612_download" class="ggvis-download" data-plot-id="plot_id247175612">Download</a>
+<a id="plot_id378360605_download" class="ggvis-download" data-plot-id="plot_id378360605">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id247175612_spec = {
+var plot_id378360605_spec = {
   "data": [
     {
       "name": ".0/mutate1",
@@ -1403,7 +1403,7 @@ var plot_id247175612_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id247175612").parseSpec(plot_id247175612_spec);
+ggvis.getPlot("plot_id378360605").parseSpec(plot_id378360605_spec);
 </script></p>
 </div>
 <div id="exercises" class="section level1">

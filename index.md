@@ -17,6 +17,6 @@ These notes cover some aspects of:
 
 I might also put together notes on visualizing missing data with [`pheatmap`](https://cran.r-project.org/web/packages/pheatmap/index.html) and [`mi`](https://cran.r-project.org/web/packages/mi/index.html).
 
-To run tutorials 1-4, you'll either need to replicate the directory structure on your computer or change `dataPath` (at the top of each tutorial)  to wherever you downloaded the data. One way to replicate the directory structure is to clone the [repository](https://github.com/bdsegal/BSA-computing-workshop). If you clone the repository, you can run the code directly from the Rmd files.
+To run tutorials 1-4, you'll either need to replicate the directory structure on your computer or change `dataPath` (at the top of each tutorial)  to wherever you downloaded the data. One way to replicate the directory structure is to clone the [repository](https://github.com/bdsegal/BSA-computing-workshop). If you clone the repository, you can run the code directly from the markdown files.
 
 Thanks, and happy computing!

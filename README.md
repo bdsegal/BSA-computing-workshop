@@ -14,6 +14,6 @@ I might also put together notes on visualizing missing data with `pheatmap` and 
 
 You can view the html files as web pages [here](http://bdsegal.github.io/BSA-computing-workshop/).
 
-To run tutorials 1-4, you'll either need to replicate the directory structure on your computer or change `dataPath` (at the top of each tutorial)  to wherever you downloaded the data. One way to replicate the directory structure is to clone this repository. If you clone the repository, you can run the code directly from the Rmd files.
+To run tutorials 1-4, you'll either need to replicate the directory structure on your computer or change `dataPath` (at the top of each tutorial)  to wherever you downloaded the data. One way to replicate the directory structure is to clone this repository. If you clone the repository, you can run the code directly from the markdown files.
 
 Thanks, and happy computing!

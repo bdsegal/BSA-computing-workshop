@@ -186,4 +186,4 @@ Note: I ran all time comparisons with `r R.version$version.string` on an intel i
 
 ---
 
-[Brian Segal](https://github.com/bdsegal)
+[Computing workshop homepage](https://bdsegal.github.io/BSA-computing-workshop/)

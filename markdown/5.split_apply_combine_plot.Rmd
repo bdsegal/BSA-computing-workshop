@@ -291,4 +291,4 @@ More recently, Hadley Wickham came out with the `tidyr` package. In [introducing
 
 ---
 
-[Brian Segal](https://github.com/bdsegal)
+[Computing workshop homepage](https://bdsegal.github.io/BSA-computing-workshop/)

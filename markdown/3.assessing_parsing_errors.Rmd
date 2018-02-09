@@ -61,4 +61,4 @@ This is one way to solve the problem, though now every column is a double, so th
 
 ---
 
-[Brian Segal](https://github.com/bdsegal)
+[Computing workshop homepage](https://bdsegal.github.io/BSA-computing-workshop/)

@@ -182,4 +182,4 @@ vis %>%
 
 ---
 
-[Brian Segal](https://github.com/bdsegal)
+[Computing workshop homepage](https://bdsegal.github.io/BSA-computing-workshop/)
